@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>나의 행동활성화 — 작은 행동, 큰 변화</title>
+<style>
+:root {
+  --bg: #f0f5f2;
+  --surface: #ffffff;
+  --surface2: #f7faf8;
+  --border: #dde8e2;
+  --text: #1a2820;
+  --text2: #4a6058;
+  --text3: #7a9088;
+  --green: #2d8a6e;
+  --green-light: #e6f5ef;
+  --green-dark: #1a5f4c;
+  --yellow: #e8a820;
+  --yellow-light: #fef6e0;
+  --coral: #e8614d;
+  --coral-light: #fef0ee;
+  --blue: #4a7fc1;
+  --blue-light: #eef4fc;
+  --purple: #7c5cbf;
+  --purple-light: #f3f0fc;
+  --r: 14px;
+  --r-sm: 8px;
+  --sh: 0 2px 12px rgba(0,0,0,.07);
+  --sh-md: 0 4px 24px rgba(0,0,0,.11);
+  --sh-lg: 0 8px 40px rgba(0,0,0,.15);
+  --tr: .18s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh}
+button,input,select,textarea{font:inherit}
+button{border:none;cursor:pointer;background:none}
+
+/* ── ONBOARDING ── */
+.ob-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#1a5f4c,#2d8a6e 50%,#4a7fc1);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px}
+.ob-overlay.gone{display:none}
+.ob-card{background:#fff;border-radius:24px;padding:40px 36px;max-width:480px;width:100%;box-shadow:var(--sh-lg);text-align:center}
+.ob-step{display:none}.ob-step.active{display:block}
+.ob-plant{font-size:64px;margin-bottom:14px;display:inline-block;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.ob-title{font-size:24px;font-weight:800;margin-bottom:8px}
+.ob-desc{color:var(--text2);margin-bottom:22px;line-height:1.75;font-size:14px}
+.ob-input{width:100%;border:2px solid var(--border);border-radius:var(--r-sm);padding:13px 16px;font-size:17px;text-align:center;outline:none;transition:border-color var(--tr);margin-bottom:18px}
+.ob-input:focus{border-color:var(--green)}
+.phq-opts{display:grid;gap:10px;margin-bottom:18px}
+.phq-opt{border:2px solid var(--border);border-radius:var(--r-sm);padding:13px 14px;cursor:pointer;text-align:left;transition:all var(--tr);display:flex;align-items:center;gap:10px;font-size:14px}
+.phq-opt:hover,.phq-opt.sel{border-color:var(--green);background:var(--green-light);color:var(--green-dark)}
+.phq-opt .oe{font-size:22px;flex:0 0 auto}
+.rec-grid{display:grid;gap:10px;margin-bottom:18px}
+.rec-item{border:2px solid var(--border);border-radius:var(--r-sm);padding:11px 13px;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:11px;text-align:left}
+.rec-item:hover,.rec-item.sel{border-color:var(--green);background:var(--green-light)}
+.rec-icon{font-size:22px;flex:0 0 auto}
+.rec-name{font-weight:700;font-size:13px}
+.rec-time{font-size:11px;color:var(--text3)}
+.btn-pri{background:var(--green);color:#fff;border-radius:var(--r-sm);padding:13px 24px;font-size:15px;font-weight:700;width:100%;transition:all var(--tr);box-shadow:0 4px 12px rgba(45,138,110,.28)}
+.btn-pri:hover{background:var(--green-dark);transform:translateY(-1px)}
+
+/* ── APP ── */
+.app{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+
+/* ── HEADER ── */
+.hdr{background:#fff;border-radius:18px;padding:18px 22px;margin-bottom:18px;box-shadow:var(--sh);display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+.hdr-brand{display:flex;align-items:center;gap:11px}
+.hdr-plant{font-size:34px;transition:transform .3s ease;cursor:default;user-select:none}
+.hdr-plant:hover{transform:scale(1.15) rotate(-6deg)}
+.hdr-title{font-size:17px;font-weight:800;line-height:1.25}
+.hdr-sub{font-size:12px;font-weight:400;color:var(--text3);display:block;margin-top:1px}
+.hdr-xp{}
+.xp-lbl{font-size:12px;color:var(--text3);font-weight:600;margin-bottom:4px;display:flex;justify-content:space-between}
+.xp-bar{height:9px;background:#e0ece6;border-radius:99px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--yellow));border-radius:99px;transition:width .5s ease}
+.hdr-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sbadge{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1.5px solid var(--border);border-radius:99px;padding:5px 11px;font-size:13px;font-weight:700}
+.sbadge.fire{color:#e8613d}
+.sbadge.lv{color:var(--green-dark)}
+
+/* ── NAV ── */
+.nav{display:flex;gap:4px;background:#fff;border-radius:14px;padding:6px;margin-bottom:18px;box-shadow:var(--sh);overflow-x:auto}
+.nav-btn{flex:1;min-width:72px;padding:9px 10px;border-radius:10px;font-size:13px;font-weight:600;color:var(--text3);transition:all var(--tr);text-align:center;white-space:nowrap}
+.nav-btn:hover{background:var(--green-light);color:var(--green-dark)}
+.nav-btn.active{background:var(--green);color:#fff;box-shadow:0 2px 8px rgba(45,138,110,.28)}
+
+/* ── SECTIONS ── */
+.sec{display:none}.sec.active{display:block}
+.sec-hdr{background:#fff;border-radius:var(--r);padding:22px 24px;margin-bottom:16px;box-shadow:var(--sh)}
+.sec-title{font-size:21px;font-weight:800;margin-bottom:3px}
+.sec-desc{color:var(--text3);font-size:14px}
+
+/* ── CARDS / PANELS ── */
+.panel{background:#fff;border-radius:var(--r);padding:22px;box-shadow:var(--sh)}
+.panel h3{font-size:16px;font-weight:800;margin-bottom:4px}
+.panel .pdesc{font-size:13px;color:var(--text3);margin-bottom:14px}
+
+/* ── FORMS ── */
+label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:5px;letter-spacing:.02em;text-transform:uppercase}
+textarea,input[type="text"],input[type="time"],select{width:100%;border:1.5px solid var(--border);border-radius:var(--r-sm);padding:10px 12px;outline:none;transition:border-color var(--tr),background var(--tr);background:var(--surface2);color:var(--text)}
+textarea:focus,input[type="text"]:focus,input[type="time"]:focus,select:focus{border-color:var(--green);background:#fff}
+textarea{min-height:96px;resize:vertical}
+
+/* ── BUTTONS ── */
+.btn{padding:9px 16px;border-radius:var(--r-sm);font-weight:700;font-size:13px;transition:all var(--tr);display:inline-flex;align-items:center;gap:6px}
+.btn-g{background:var(--green);color:#fff;box-shadow:0 2px 8px rgba(45,138,110,.25)}
+.btn-g:hover{background:var(--green-dark);transform:translateY(-1px)}
+.btn-o{border:1.5px solid var(--border);color:var(--text2);background:#fff}
+.btn-o:hover{border-color:var(--green);color:var(--green-dark)}
+.btn-d{border:1.5px solid #ffd5d0;color:var(--coral);background:#fff}
+.btn-d:hover{background:var(--coral-light)}
+.btn-sm{padding:6px 11px;font-size:12px}
+
+/* ── HOME ── */
+.home-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.stat-c{background:#fff;border-radius:var(--r);padding:18px;box-shadow:var(--sh);text-align:center}
+.stat-c .si{font-size:30px;margin-bottom:6px}
+.stat-c .sv{font-size:26px;font-weight:800}
+.stat-c .sl{font-size:12px;color:var(--text3);margin-top:2px}
+.missions{background:#fff;border-radius:var(--r);padding:22px;box-shadow:var(--sh);margin-bottom:14px}
+.missions-title{font-size:17px;font-weight:800;margin-bottom:2px}
+.missions-date{font-size:12px;color:var(--text3);margin-bottom:14px}
+.mission-item{display:flex;align-items:center;gap:11px;padding:11px 12px;border:2px solid var(--border);border-radius:var(--r-sm);margin-bottom:9px;transition:all var(--tr);cursor:pointer}
+.mission-item:hover{border-color:var(--green);background:var(--green-light)}
+.mission-item.done{border-color:var(--green);background:var(--green-light);opacity:.72}
+.mission-item.done .mname{text-decoration:line-through;color:var(--text3)}
+.mcheck{width:22px;height:22px;border:2px solid var(--border);border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-size:13px;transition:all var(--tr)}
+.mission-item.done .mcheck{background:var(--green);border-color:var(--green);color:#fff}
+.mname{font-weight:600;font-size:14px;flex:1}
+.mxp{font-size:11px;color:var(--yellow);font-weight:700;background:var(--yellow-light);padding:3px 8px;border-radius:99px}
+.motiv-card{background:linear-gradient(135deg,var(--green),#4a9e7a);border-radius:var(--r);padding:22px;color:#fff;box-shadow:var(--sh-md)}
+.motiv-text{font-size:15px;line-height:1.75}
+.motiv-author{font-size:12px;opacity:.78;margin-top:8px}
+
+/* ── SAFETY ── */
+.safety{background:#fff8f0;border:1px solid #ffd5b5;border-left:4px solid var(--yellow);border-radius:var(--r);padding:13px 16px;font-size:13px;color:#7a5830;margin-bottom:14px;line-height:1.7}
+
+/* ── VALUES ── */
+.values-g{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.week-ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.wt{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh);border-left:4px solid var(--green)}
+.wt h4{font-size:14px;font-weight:800;color:var(--green-dark);margin-bottom:5px}
+.wt p{font-size:13px;color:var(--text3);line-height:1.6}
+
+/* ── ACTIVITIES ── */
+.add-row{background:#fff;border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);margin-bottom:14px;display:grid;grid-template-columns:1fr auto auto auto auto;gap:10px;align-items:end}
+.fchips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.fchip{padding:5px 13px;border:1.5px solid var(--border);border-radius:99px;font-size:13px;font-weight:600;color:var(--text2);transition:all var(--tr);cursor:pointer}
+.fchip:hover,.fchip.on{border-color:var(--green);background:var(--green-light);color:var(--green-dark)}
+.act-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.act-card{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh);border:2px solid transparent;transition:all var(--tr);cursor:pointer;position:relative}
+.act-card:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:var(--sh-md)}
+.act-card.sel{border-color:var(--green);background:var(--green-light)}
+.card-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px}
+.card-name{font-size:14px;font-weight:700;line-height:1.4;flex:1}
+.ctag{padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+.t성취{background:var(--blue-light);color:var(--blue)}
+.t즐거움{background:var(--yellow-light);color:#b8860b}
+.t연결{background:var(--purple-light);color:var(--purple)}
+.t건강{background:var(--green-light);color:var(--green-dark)}
+.card-meta{display:flex;align-items:center;gap:9px}
+.card-time{font-size:12px;color:var(--text3)}
+.ddots{display:flex;gap:3px}
+.dd{width:7px;height:7px;border-radius:50%;background:var(--border)}
+.dd.on{background:var(--yellow)}
+.cxp{font-size:11px;font-weight:700;color:var(--yellow);background:var(--yellow-light);padding:2px 7px;border-radius:99px;margin-left:auto}
+.sel-badge{position:absolute;top:-8px;right:-8px;background:var(--green);color:#fff;width:22px;height:22px;border-radius:50%;display:none;place-items:center;font-size:13px;box-shadow:0 2px 6px rgba(45,138,110,.4)}
+.act-card.sel .sel-badge{display:grid}
+.tip{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--border);color:var(--text3);font-size:10px;font-weight:700;cursor:help;position:relative}
+.tip:hover .tiptext,.tip:focus .tiptext{display:block}
+.tiptext{display:none;position:absolute;bottom:130%;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:8px 11px;border-radius:8px;font-size:11px;font-weight:400;width:180px;line-height:1.5;z-index:20;box-shadow:var(--sh-md);pointer-events:none}
+
+/* ── PLAN ── */
+.plan-add{background:#fff;border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);margin-bottom:14px;display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:end}
+.wgrid{display:grid;grid-template-columns:repeat(7,minmax(124px,1fr));gap:10px;overflow-x:auto;padding-bottom:6px}
+.day-col{background:#fff;border-radius:var(--r);padding:12px;min-height:250px;box-shadow:var(--sh)}
+.day-col.today{border:2px solid var(--green)}
+.day-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.day-name{font-size:13px;font-weight:800;color:var(--text2)}
+.day-cnt{font-size:11px;color:var(--text3)}
+.plan-item{border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 9px;margin-bottom:7px;background:var(--surface2);border-left:3px solid var(--blue)}
+.plan-item.done{border-left-color:var(--green);background:var(--green-light)}
+.pi-name{font-size:12px;font-weight:700;margin-bottom:3px}
+.plan-item.done .pi-name{text-decoration:line-through;color:var(--text3)}
+.pi-time{font-size:11px;color:var(--text3)}
+.pi-acts{display:flex;justify-content:space-between;align-items:center;margin-top:5px}
+.ck-btn{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:grid;place-items:center;font-size:11px;color:var(--text3);cursor:pointer;transition:all var(--tr)}
+.plan-item.done .ck-btn{background:var(--green);border-color:var(--green);color:#fff}
+.x-btn{width:20px;height:20px;border-radius:4px;color:var(--text3);font-size:14px;display:grid;place-items:center;transition:all var(--tr)}
+.x-btn:hover{background:var(--coral-light);color:var(--coral)}
+
+/* ── LOG ── */
+.log-g{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mpicker{display:flex;gap:7px;margin-bottom:14px}
+.mopt{flex:1;border:2px solid var(--border);border-radius:var(--r-sm);padding:10px 6px;text-align:center;cursor:pointer;transition:all var(--tr)}
+.mopt:hover,.mopt.sel{border-color:var(--green);background:var(--green-light);transform:scale(1.05)}
+.mopt .me{font-size:26px;display:block}
+.mopt .ml{font-size:10px;color:var(--text3);margin-top:3px;display:block}
+.log-list{display:grid;gap:10px}
+.log-item{background:#fff;border-radius:var(--r);padding:15px 16px;box-shadow:var(--sh);display:flex;gap:13px;align-items:center}
+.log-badge{width:46px;height:46px;border-radius:50%;background:var(--green-light);display:grid;place-items:center;font-size:24px;flex:0 0 auto}
+.log-info{flex:1}
+.log-name{font-size:14px;font-weight:700;margin-bottom:2px}
+.log-meta{font-size:12px;color:var(--text3)}
+.log-note{font-size:12px;color:var(--text2);margin-top:2px}
+.log-diff{font-size:15px;font-weight:800}
+.up{color:var(--green)}.dn{color:var(--coral)}.ne{color:var(--text3)}
+
+/* ── GROWTH ── */
+.grow-hdr{background:linear-gradient(135deg,var(--green),var(--blue));border-radius:var(--r);padding:22px;color:#fff;text-align:center;margin-bottom:16px;box-shadow:var(--sh-md)}
+.grow-plant{font-size:60px;margin-bottom:8px}
+.grow-lvname{font-size:21px;font-weight:800;margin-bottom:4px}
+.grow-desc{opacity:.85;font-size:14px}
+.m-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.mc{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh);text-align:center}
+.mc .mv{font-size:26px;font-weight:800}
+.mc .ml{font-size:12px;color:var(--text3);margin-top:2px}
+.badges-sec{background:#fff;border-radius:var(--r);padding:20px;box-shadow:var(--sh);margin-bottom:14px}
+.badges-title{font-size:15px;font-weight:800;margin-bottom:13px}
+.badges-g{display:flex;flex-wrap:wrap;gap:12px}
+.badge-it{text-align:center;width:68px}
+.badge-ic{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:26px;margin:0 auto 5px;transition:transform var(--tr)}
+.badge-ic:hover{transform:scale(1.12)}
+.badge-it.earned .badge-ic{background:var(--yellow-light)}
+.badge-it.locked .badge-ic{background:var(--border);filter:grayscale(1);opacity:.45}
+.badge-it .bn{font-size:11px;font-weight:600;color:var(--text3);line-height:1.3}
+.hmap-sec{background:#fff;border-radius:var(--r);padding:20px;box-shadow:var(--sh);margin-bottom:14px}
+.hmap-title{font-size:15px;font-weight:800;margin-bottom:12px}
+.hmap-g{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.hmap-lbl{font-size:10px;color:var(--text3);text-align:center;padding:2px}
+.hmap-cell{aspect-ratio:1;border-radius:3px;background:var(--border);transition:transform var(--tr)}
+.hmap-cell:hover{transform:scale(1.3);z-index:1;position:relative}
+.hmap-cell.l1{background:#c8e6d8}.hmap-cell.l2{background:#89c9aa}.hmap-cell.l3{background:#4aab7c}.hmap-cell.l4{background:var(--green)}
+.hmap-cell.td{outline:2px solid var(--yellow);outline-offset:1px}
+.bar-chart{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;height:170px;align-items:end;background:var(--surface2);border-radius:var(--r);padding:14px 12px 8px;margin-bottom:14px}
+.bcol{display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.bbar{min-height:5px;width:100%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--green),var(--green-dark));transition:height .5s ease}
+.blbl{font-size:10px;color:var(--text3)}
+.adv-g{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.adv-c{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.adv-c h4{font-size:14px;font-weight:800;margin-bottom:6px}
+.adv-c p{font-size:13px;color:var(--text3);line-height:1.7}
+
+/* ── EMERGENCY FAB ── */
+.efab{position:fixed;bottom:26px;right:26px;background:var(--coral);color:#fff;border-radius:99px;padding:11px 18px;font-weight:700;font-size:13px;box-shadow:0 4px 20px rgba(232,97,77,.38);z-index:100;display:flex;align-items:center;gap:7px;transition:all var(--tr)}
+.efab:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 6px 28px rgba(232,97,77,.48)}
+
+/* ── MODALS ── */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+.modal-ov.gone{display:none}
+.modal-c{background:#fff;border-radius:20px;padding:30px;max-width:460px;width:100%;box-shadow:var(--sh-lg)}
+.modal-t{font-size:20px;font-weight:800;margin-bottom:7px}
+.modal-d{color:var(--text3);font-size:13px;margin-bottom:18px;line-height:1.7}
+.crisis-lines{display:grid;gap:9px;margin-bottom:16px}
+.crisis-line{display:flex;align-items:center;gap:11px;padding:13px;background:var(--coral-light);border-radius:var(--r-sm);border:1px solid #ffd5d0}
+.ci{font-size:22px}
+.cinfo strong{display:block;font-size:13px}
+.cinfo span{font-size:15px;font-weight:800;color:var(--coral)}
+.crisis-tip{font-size:13px;color:var(--text3);margin-bottom:16px;line-height:1.7}
+
+/* ── LEVELUP MODAL ── */
+.lv-ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;display:flex;align-items:center;justify-content:center;padding:24px}
+.lv-ov.gone{display:none}
+.lv-c{background:#fff;border-radius:24px;padding:38px;text-align:center;max-width:340px;width:100%;box-shadow:var(--sh-lg);animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.lv-plant{font-size:76px;margin-bottom:10px;display:inline-block;animation:bounce 1s ease-in-out infinite}
+.lv-title{font-size:26px;font-weight:800;margin-bottom:5px}
+.lv-sub{color:var(--text3);margin-bottom:18px;font-size:14px}
+
+/* ── CONFETTI ── */
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:900;overflow:hidden}
+.cp{position:absolute;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(102vh) rotate(720deg);opacity:0}}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:28px;color:var(--text3);background:#fff;border-radius:var(--r);border:2px dashed var(--border)}
+.empty .ei{font-size:34px;margin-bottom:7px}
+.empty p{font-size:13px}
+
+/* ── TOOLBAR ── */
+.tbar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:14px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px}
+.fgrp{margin-bottom:11px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .values-g,.log-g{grid-template-columns:1fr}
+  .act-grid{grid-template-columns:1fr}
+  .m-grid{grid-template-columns:repeat(2,1fr)}
+  .adv-g{grid-template-columns:1fr}
+  .add-row{grid-template-columns:1fr 1fr}
+  .add-row .btn{grid-column:1/-1;justify-content:center}
+  .plan-add{grid-template-columns:1fr 1fr}
+  .plan-add .btn{grid-column:1/-1;justify-content:center}
+  .week-ladder{grid-template-columns:1fr}
+  .frow{grid-template-columns:1fr}
+  .hdr{grid-template-columns:1fr auto}
+  .hdr-xp{display:none}
+}
+@media(max-width:600px){
+  .app{padding:12px 12px 50px}
+  .home-stats{gap:8px}
+  .stat-c{padding:13px}
+  .stat-c .sv{font-size:22px}
+  .nav-btn{font-size:12px;padding:8px 5px}
+  .m-grid{grid-template-columns:repeat(2,1fr)}
+  .efab{bottom:14px;right:14px;padding:9px 14px}
+  .add-row{grid-template-columns:1fr}
+  .hdr-right .btn-sm{display:none}
+}
+@media print{
+  .efab,.nav,.hdr,.tbar{display:none!important}
+  .sec{display:block!important}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<!-- ONBOARDING -->
+<div class="ob-overlay" id="obOverlay">
+  <div class="ob-card">
+    <div class="ob-step active" id="ob1">
+      <div class="ob-plant">🌱</div>
+      <div class="ob-title">안녕하세요!</div>
+      <div class="ob-desc">행동활성화는 기분이 좋아지길 기다리는 대신,<br>작고 구체적인 행동으로 먼저 움직이는 방법이에요.<br>이름을 알려주시면 함께 시작할게요 :)</div>
+      <input class="ob-input" id="nameInput" placeholder="닉네임 또는 이름" maxlength="20" autocomplete="off">
+      <button class="btn-pri" onclick="ob2()">다음 →</button>
+    </div>
+    <div class="ob-step" id="ob2">
+      <div class="ob-plant">🤔</div>
+      <div class="ob-title">요즘 어떠세요?</div>
+      <div class="ob-desc">솔직하게 골라주세요. 맞고 틀림이 없어요.</div>
+      <div class="phq-opts">
+        <button class="phq-opt" data-e="high" onclick="selE(this)"><span class="oe">😊</span>나름 에너지가 있어요. 더 잘하고 싶어요.</button>
+        <button class="phq-opt" data-e="med" onclick="selE(this)"><span class="oe">😐</span>기복이 있어요. 어떤 날은 괜찮고 어떤 날은 힘들어요.</button>
+        <button class="phq-opt" data-e="low" onclick="selE(this)"><span class="oe">😔</span>많이 무기력하고 의욕이 없어요.</button>
+      </div>
+      <button class="btn-pri" onclick="ob3()">다음 →</button>
+    </div>
+    <div class="ob-step" id="ob3">
+      <div class="ob-plant">✨</div>
+      <div class="ob-title">첫 활동을 골라볼까요?</div>
+      <div class="ob-desc">지금 할 수 있을 것 같은 활동을 1~3개 선택하세요.</div>
+      <div class="rec-grid" id="recGrid"></div>
+      <button class="btn-pri" onclick="finishOb()">시작하기 🌱</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMERGENCY MODAL -->
+<div class="modal-ov gone" id="emModal">
+  <div class="modal-c">
+    <div class="modal-t">💙 지금 괜찮으세요?</div>
+    <div class="modal-d">아래는 즉시 도움을 받을 수 있는 곳이에요.<br>이 도구는 전문 치료를 대신하지 않습니다.</div>
+    <div class="crisis-lines">
+      <div class="crisis-line"><span class="ci">📞</span><div class="cinfo"><strong>자살예방상담전화 (24시간)</strong><span>1393</span></div></div>
+      <div class="crisis-line"><span class="ci">💬</span><div class="cinfo"><strong>정신건강 위기상담전화 (24시간)</strong><span>1577-0199</span></div></div>
+      <div class="crisis-line"><span class="ci">🏥</span><div class="cinfo"><strong>응급상황</strong><span>119 · 가까운 응급실</span></div></div>
+    </div>
+    <div class="crisis-tip">지금 당장 위험하지 않다면, 창문을 열고 천천히 숨을 5번 쉬어보세요.</div>
+    <button class="btn btn-o" style="width:100%" onclick="closeM('emModal')">닫기</button>
+  </div>
+</div>
+
+<!-- LEVELUP MODAL -->
+<div class="lv-ov gone" id="lvModal">
+  <div class="lv-c">
+    <div class="lv-plant" id="lvPlant">🌿</div>
+    <div class="lv-title" id="lvTitle">레벨 업!</div>
+    <div class="lv-sub" id="lvSub">새로운 단계로 성장했어요</div>
+    <button class="btn-pri" onclick="closeM('lvModal')">계속 성장하기 🚀</button>
+  </div>
+</div>
+
+<!-- CONFETTI -->
+<div class="confetti-wrap" id="cfWrap"></div>
+
+<!-- APP -->
+<div class="app">
+  <header class="hdr">
+    <div class="hdr-brand">
+      <div class="hdr-plant" id="hdrPlant">🌱</div>
+      <div>
+        <div class="hdr-title" id="hdrTitle">나의 행동활성화</div>
+        <span class="hdr-sub" id="hdrSub">작은 행동, 큰 변화</span>
+      </div>
+    </div>
+    <div class="hdr-xp">
+      <div class="xp-lbl"><span id="lvName">씨앗 단계</span><span id="xpDisp">0 XP</span></div>
+      <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+    </div>
+    <div class="hdr-right">
+      <div class="sbadge fire">🔥 <span id="streakN">0</span>일</div>
+      <div class="sbadge lv">Lv.<span id="lvN">1</span></div>
+      <button class="btn btn-o btn-sm" id="saveBtn">💾 저장</button>
+      <button class="btn btn-d btn-sm" id="resetBtn">↺ 초기화</button>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <button class="nav-btn active" data-tab="home">🏠 홈</button>
+    <button class="nav-btn" data-tab="values">💎 가치</button>
+    <button class="nav-btn" data-tab="activities">⚡ 활동</button>
+    <button class="nav-btn" data-tab="plan">📅 계획</button>
+    <button class="nav-btn" data-tab="log">📝 기록</button>
+    <button class="nav-btn" data-tab="growth">🌳 성장</button>
+  </nav>
+
+  <!-- HOME -->
+  <section class="sec active" id="sec-home">
+    <div class="safety">⚠️ 이 도구는 진단·치료를 대신하지 않습니다. 자해·자살 충동이 있다면 즉시 전문가 도움을 받으세요 (우측 하단 버튼).</div>
+    <div class="home-stats">
+      <div class="stat-c"><div class="si">🎯</div><div class="sv" id="stPlanned">0</div><div class="sl">오늘 계획</div></div>
+      <div class="stat-c"><div class="si">✅</div><div class="sv" id="stDone">0</div><div class="sl">오늘 완료</div></div>
+      <div class="stat-c"><div class="si">⭐</div><div class="sv" id="stXP">0</div><div class="sl">총 XP</div></div>
+    </div>
+    <div class="missions">
+      <div class="missions-title">오늘의 미션</div>
+      <div class="missions-date" id="todayDate"></div>
+      <div id="missionList"></div>
+    </div>
+    <div class="motiv-card">
+      <div class="motiv-text" id="motivText"></div>
+      <div class="motiv-author" id="motivAuthor"></div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="sec" id="sec-values">
+    <div class="sec-hdr"><div class="sec-title">💎 가치와 목표</div><div class="sec-desc">활동은 내가 중요하게 여기는 삶과 연결될수록 더 오래갑니다.</div></div>
+    <div class="values-g">
+      <div class="panel">
+        <h3>나에게 중요한 것</h3>
+        <p class="pdesc">다시 되찾고 싶은 삶의 영역을 적어보세요</p>
+        <div class="fgrp"><label>중요한 가치 영역</label><textarea id="valuesInput" placeholder="예: 건강, 가족과 시간, 일의 리듬, 친구와 연락, 배움"></textarea></div>
+        <div class="fgrp"><label>이번 주 최소 목표</label><textarea id="goalInput" placeholder="예: 10분짜리 활동 2개 실행하기. 완벽하지 않아도 OK."></textarea></div>
+      </div>
+      <div class="panel">
+        <h3>방해 요인 대처</h3>
+        <p class="pdesc">미리 적어두면 막혔을 때 꺼내볼 수 있어요</p>
+        <div class="fgrp"><label>예상 방해요인</label><textarea id="barrierInput" placeholder="예: 피곤함, 시작 전 부담감, 늦잠, 혼자 하기 싫음"></textarea></div>
+        <div class="fgrp"><label>대처 문장 (If-Then)</label><textarea id="ifThenInput" placeholder="예: 오후 3시에 무기력하면, 5분만 씻고 창문을 연 뒤 다시 결정한다."></textarea></div>
+      </div>
+    </div>
+    <div class="week-ladder">
+      <div class="wt"><h4>🌱 1주차</h4><p>일상 패턴 관찰. 가장 쉬운 활동 2~3개만 배치. 성공 기준을 낮게!</p></div>
+      <div class="wt"><h4>🌿 2주차</h4><p>즐거움·성취·연결 활동을 균형 있게 추가. 기분 변화 기록하기.</p></div>
+      <div class="wt"><h4>🌸 3~4주차</h4><p>난이도 한 단계 올리기. 방해요인 대처 계획을 실제로 활용해보기.</p></div>
+    </div>
+  </section>
+
+  <!-- ACTIVITIES -->
+  <section class="sec" id="sec-activities">
+    <div class="sec-hdr"><div class="sec-title">⚡ 활동 라이브러리</div><div class="sec-desc">선택한 활동이 주간 계획과 오늘의 미션에 표시됩니다.</div></div>
+    <div class="add-row">
+      <div><label>활동 직접 추가</label><input type="text" id="customAct" placeholder="예: 세탁기 돌리기, 7분 스트레칭"></div>
+      <div><label>종류</label><select id="customType"><option>성취</option><option>즐거움</option><option>연결</option><option>건강</option></select></div>
+      <div><label>난이도</label><select id="customLv"><option value="1">🟡 쉬움 (10XP)</option><option value="2">🟠 보통 (20XP)</option><option value="3">🔴 도전 (35XP)</option></select></div>
+      <div><label>시간</label><select id="customTime"><option>3분</option><option>10분</option><option>20분</option><option>30분</option><option>1시간</option></select></div>
+      <div><label>&nbsp;</label><button class="btn btn-g" id="addActBtn">+ 추가</button></div>
+    </div>
+    <div class="fchips" id="fchips"></div>
+    <div class="act-grid" id="actGrid"></div>
+  </section>
+
+  <!-- PLAN -->
+  <section class="sec" id="sec-plan">
+    <div class="sec-hdr"><div class="sec-title">📅 주간 계획</div><div class="sec-desc">하루에 한 개만 넣어도 충분해요. 시간을 구체적으로 정하면 실행 가능성이 올라가요.</div></div>
+    <div class="plan-add">
+      <div><label>활동 선택</label><select id="planAct"></select></div>
+      <div><label>요일</label><select id="planDay"></select></div>
+      <div><label>시간</label><input type="time" id="planTime" value="10:00"></div>
+      <div><label>&nbsp;</label><button class="btn btn-g" id="addPlanBtn">+ 배치</button></div>
+    </div>
+    <div class="wgrid" id="weekGrid"></div>
+  </section>
+
+  <!-- LOG -->
+  <section class="sec" id="sec-log">
+    <div class="sec-hdr"><div class="sec-title">📝 오늘 기록</div><div class="sec-desc">짧은 기록이 패턴을 만들어요. 활동 전후 기분 차이만 봐도 충분해요.</div></div>
+    <div class="log-g">
+      <div class="panel">
+        <h3>기록 추가</h3>
+        <div class="fgrp"><label>어떤 활동을 했나요?</label><select id="logAct"></select></div>
+        <div class="fgrp">
+          <label>활동 전 기분</label>
+          <div class="mpicker" id="bMood">
+            <div class="mopt" data-v="1" onclick="selMood('b',1,this)"><span class="me">😣</span><span class="ml">매우 나쁨</span></div>
+            <div class="mopt" data-v="3" onclick="selMood('b',3,this)"><span class="me">😔</span><span class="ml">나쁨</span></div>
+            <div class="mopt sel" data-v="5" onclick="selMood('b',5,this)"><span class="me">😐</span><span class="ml">보통</span></div>
+            <div class="mopt" data-v="7" onclick="selMood('b',7,this)"><span class="me">🙂</span><span class="ml">좋음</span></div>
+            <div class="mopt" data-v="9" onclick="selMood('b',9,this)"><span class="me">😄</span><span class="ml">매우 좋음</span></div>
+          </div>
+        </div>
+        <div class="fgrp">
+          <label>활동 후 기분</label>
+          <div class="mpicker" id="aMood">
+            <div class="mopt" data-v="1" onclick="selMood('a',1,this)"><span class="me">😣</span><span class="ml">매우 나쁨</span></div>
+            <div class="mopt" data-v="3" onclick="selMood('a',3,this)"><span class="me">😔</span><span class="ml">나쁨</span></div>
+            <div class="mopt sel" data-v="5" onclick="selMood('a',5,this)"><span class="me">😐</span><span class="ml">보통</span></div>
+            <div class="mopt" data-v="7" onclick="selMood('a',7,this)"><span class="me">🙂</span><span class="ml">좋음</span></div>
+            <div class="mopt" data-v="9" onclick="selMood('a',9,this)"><span class="me">😄</span><span class="ml">매우 좋음</span></div>
+          </div>
+        </div>
+        <div class="fgrp"><label>짧은 메모 (선택)</label><input type="text" id="logNote" placeholder="예: 하기 전엔 싫었지만 끝나고 가벼웠다"></div>
+        <button class="btn btn-g" id="addLogBtn" style="width:100%">✓ 기록 추가</button>
+      </div>
+      <div id="logCont">
+        <div class="empty"><div class="ei">📋</div><p>아직 기록이 없어요.<br>활동 후 기분을 기록해보세요!</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GROWTH -->
+  <section class="sec" id="sec-growth">
+    <div class="grow-hdr">
+      <div class="grow-plant" id="growPlant">🌱</div>
+      <div class="grow-lvname" id="growLvName">씨앗 단계</div>
+      <div class="grow-desc" id="growDesc">첫 활동을 완료하면 성장을 시작해요!</div>
+    </div>
+    <div class="m-grid">
+      <div class="mc"><div class="mv" id="mTotal">0</div><div class="ml">총 계획 수</div></div>
+      <div class="mc"><div class="mv" id="mDone">0</div><div class="ml">완료 수</div></div>
+      <div class="mc"><div class="mv" id="mStreak">0</div><div class="ml">최장 스트릭</div></div>
+      <div class="mc"><div class="mv" id="mMood">+0</div><div class="ml">평균 기분 변화</div></div>
+    </div>
+    <div class="badges-sec">
+      <div class="badges-title">🏆 뱃지 컬렉션</div>
+      <div class="badges-g" id="badgesG"></div>
+    </div>
+    <div class="hmap-sec">
+      <div class="hmap-title">📊 활동 기록 (최근 5주)</div>
+      <div class="hmap-g" id="hmapG"></div>
+    </div>
+    <div class="bar-chart" id="barChart"></div>
+    <div class="adv-g">
+      <div class="adv-c"><h4>💡 다음 주 조정 제안</h4><p id="reviewSug">활동을 2~3개 선택하고, 가장 쉬운 시간대에 먼저 배치해보세요.</p></div>
+      <div class="adv-c"><h4>🏥 전문가 도움이 필요할 때</h4><p>우울감이 2주 이상 지속되거나, 일·대인관계·수면·식사 기능이 크게 흔들리면 의료진 또는 정신건강 전문가와 상의하세요.</p></div>
+    </div>
+  </section>
+</div>
+
+<button class="efab" onclick="openM('emModal')">💙 지금 힘들어요</button>
+
+<script>
+// ─── CONSTANTS ───
+const SK = "ba-v3";
+const DAYS = ["월","화","수","목","금","토","일"];
+const DAY_FULL = ["월요일","화요일","수요일","목요일","금요일","토요일","일요일"];
+const XP = {1:10,2:20,3:35};
+const LEVELS = [
+  {min:0,   max:50,  name:"씨앗", plant:"🌱", desc:"작은 시작이 큰 변화를 만들어요!"},
+  {min:50,  max:150, name:"새싹", plant:"🌿", desc:"꾸준히 자라고 있어요!"},
+  {min:150, max:350, name:"잎",   plant:"🍃", desc:"일상이 조금씩 달라지고 있어요."},
+  {min:350, max:700, name:"꽃",   plant:"🌸", desc:"아름답게 피어나고 있어요."},
+  {min:700, max:Infinity, name:"나무", plant:"🌳", desc:"당신은 이제 든든한 나무입니다."}
+];
+const ALL_BADGES = [
+  {id:"first",  e:"🎉", n:"첫 발걸음",  d:"첫 활동 완료"},
+  {id:"three",  e:"🔥", n:"3일 연속",   d:"3일 연속 실행"},
+  {id:"seven",  e:"⚡", n:"일주일",     d:"7일 연속 실행"},
+  {id:"ten",    e:"💎", n:"10회 달성",  d:"활동 10회 완료"},
+  {id:"thirty", e:"👑", n:"30회 달성",  d:"활동 30회 완료"},
+  {id:"variety",e:"🌈", n:"다양성",     d:"4가지 종류 모두 완료"},
+  {id:"log5",   e:"📓", n:"꼼꼼한 기록",d:"기록 5회"},
+  {id:"moodup", e:"🌤️", n:"기분 향상",  d:"기분이 오른 기록 5회"},
+];
+const MOTIVS = [
+  {t:"기분이 좋아질 때까지 기다리지 마세요. 행동이 먼저, 기분은 나중에 옵니다.",a:"— BA 이론의 핵심"},
+  {t:"오늘의 5분이 내일의 30분을 만들어요. 작아도 충분해요.",a:"— 행동활성화 원칙"},
+  {t:"완벽한 실행이 아니라, 어제보다 조금 더. 그걸로 충분합니다.",a:""},
+  {t:"몸이 움직이면 뇌도 따라와요. 일단 신발을 신어보세요.",a:""},
+  {t:"힘든 날의 작은 행동이, 좋은 날의 큰 행동보다 훨씬 가치 있어요.",a:""},
+  {t:"회피는 단기적으로 편하지만, 장기적으로 우울을 키워요. 오늘 한 번만 반대로.",a:""},
+  {t:"'하고 싶어지면 한다'가 아니라 '정한 시간에 아주 작게 한다'를 기준으로 두세요.",a:"— BA 핵심 원칙"},
+];
+const RECS = {
+  low:[
+    {n:"창문 열고 물 한 컵 마시기",e:"💧"},
+    {n:"집 주변 5분 걷기",e:"🚶"},
+    {n:"안부 문자 한 명에게 보내기",e:"💬"},
+    {n:"좋아했던 노래 2곡 듣기",e:"🎵"},
+  ],
+  med:[
+    {n:"책상 위 한 구역만 치우기",e:"🧹"},
+    {n:"친한 사람에게 10분 통화 제안",e:"📞"},
+    {n:"카페나 도서관에서 20분 머물기",e:"☕"},
+    {n:"샤워 후 깨끗한 옷 갈아입기",e:"🛁"},
+  ],
+  high:[
+    {n:"운동 영상 15분 따라 하기",e:"🏃"},
+    {n:"미뤄둔 행정 일 하나 처리",e:"📋"},
+    {n:"소규모 약속 하나 잡기",e:"👥"},
+    {n:"15분 장보기 또는 식재료 주문",e:"🛒"},
+  ]
+};
+const DEF_ACTS = [
+  {id:uid(),name:"창문 열고 물 한 컵 마시기",type:"건강",level:1,dur:"3분",sel:true,why:"빛과 신선한 공기는 즉각적으로 기분을 전환시켜요."},
+  {id:uid(),name:"집 주변 5분 걷기",type:"건강",level:1,dur:"5분",sel:true,why:"걷기는 세로토닌 분비를 증가시키는 가장 쉬운 방법이에요."},
+  {id:uid(),name:"안부 문자 한 명에게 보내기",type:"연결",level:1,dur:"3분",sel:true,why:"사회적 연결은 우울증의 가장 강력한 보호 요인입니다."},
+  {id:uid(),name:"책상 위 한 구역만 치우기",type:"성취",level:1,dur:"10분",sel:false,why:"작은 성취는 자기효능감을 회복시켜요."},
+  {id:uid(),name:"좋아했던 노래 2곡 듣기",type:"즐거움",level:1,dur:"10분",sel:false,why:"음악은 도파민 분비를 자극하고 기분을 빠르게 바꿔요."},
+  {id:uid(),name:"샤워 후 깨끗한 옷 갈아입기",type:"건강",level:2,dur:"20분",sel:false,why:"자기돌봄 행동은 자기존중감 회복의 첫 단계예요."},
+  {id:uid(),name:"15분 장보기 또는 식재료 주문",type:"성취",level:2,dur:"15분",sel:false,why:"미루던 일을 처리하면 인지적 부담이 줄어들어요."},
+  {id:uid(),name:"친한 사람에게 10분 통화 제안",type:"연결",level:2,dur:"10분",sel:false,why:"실시간 목소리 대화는 유대감을 훨씬 강하게 만들어요."},
+  {id:uid(),name:"카페나 도서관에서 20분 머물기",type:"즐거움",level:2,dur:"20분",sel:false,why:"환경을 바꾸는 것만으로도 무기력 고리를 끊을 수 있어요."},
+  {id:uid(),name:"미뤄둔 행정 일 하나 처리",type:"성취",level:3,dur:"30분",sel:false,why:"밀린 일이 사라질 때 인지적 부하가 크게 줄어요."},
+  {id:uid(),name:"운동 영상 15분 따라 하기",type:"건강",level:3,dur:"15분",sel:false,why:"운동은 항우울 효과가 입증된 가장 강력한 행동이에요."},
+  {id:uid(),name:"소규모 약속 하나 잡기",type:"연결",level:3,dur:"10분",sel:false,why:"미래 계획은 희망과 기대감을 만들어요."},
+];
+
+// ─── STATE ───
+let S = load();
+let moodB = 5, moodA = 5;
+let activeFilt = "전체";
+let selEnergy = "med";
+let selRecs = [];
+
+function uid(){return `id-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}
+function load(){
+  try{const s=localStorage.getItem(SK);if(s)return JSON.parse(s);}catch(e){}
+  return {done:false,name:"",energy:"med",values:"",goal:"",barrier:"",ifThen:"",
+    acts:DEF_ACTS,plans:[],logs:[],xp:0,streak:0,lastDate:null,maxStreak:0,badges:[],hmap:{},totalDone:0};
+}
+function save(t){localStorage.setItem(SK,JSON.stringify(S));if(t)toast("저장되었습니다 💾")}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function todayStr(){return new Date().toISOString().slice(0,10)}
+
+// ─── ONBOARDING ───
+function ob2(){
+  const n=document.getElementById("nameInput").value.trim();
+  if(!n){document.getElementById("nameInput").focus();return;}
+  S.name=n;step(2);
+}
+function ob3(){
+  const level=selEnergy;
+  const g=document.getElementById("recGrid");
+  selRecs=[];
+  g.innerHTML=RECS[level].map((r,i)=>`
+    <div class="rec-item" data-i="${i}" onclick="togRec(this,${i})">
+      <span class="rec-icon">${r.e}</span>
+      <div><div class="rec-name">${r.n}</div><div class="rec-time">⏱ 손쉽게</div></div>
+    </div>`).join("");
+  step(3);
+}
+function step(n){
+  document.querySelectorAll(".ob-step").forEach(s=>s.classList.remove("active"));
+  document.getElementById("ob"+n).classList.add("active");
+}
+function selE(el){
+  document.querySelectorAll(".phq-opt").forEach(o=>o.classList.remove("sel"));
+  el.classList.add("sel");selEnergy=el.dataset.e;
+}
+function togRec(el,i){
+  el.classList.toggle("sel");
+  const n=RECS[selEnergy][i].n;
+  if(el.classList.contains("sel"))selRecs.push(n);
+  else selRecs=selRecs.filter(x=>x!==n);
+}
+function finishOb(){
+  S.energy=selEnergy;
+  if(selRecs.length)S.acts.forEach(a=>{if(selRecs.includes(a.name))a.sel=true;});
+  S.done=true;save();
+  document.getElementById("obOverlay").classList.add("gone");
+  syncAll();
+}
+
+// ─── MODALS ───
+function openM(id){document.getElementById(id).classList.remove("gone")}
+function closeM(id){document.getElementById(id).classList.add("gone")}
+
+// ─── TABS ───
+document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
+function switchTab(id){
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
+  document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("active",s.id==="sec-"+id));
+  if(id==="growth")renderGrowth();
+}
+
+// ─── LEVEL ───
+function getLevel(){
+  for(let i=LEVELS.length-1;i>=0;i--)if(S.xp>=LEVELS[i].min)return{...LEVELS[i],idx:i+1};
+  return{...LEVELS[0],idx:1};
+}
+function addXP(amt){
+  const prev=getLevel();S.xp+=amt;const next=getLevel();
+  if(next.idx>prev.idx)showLvUp(next);
+  updateHdr();xpToast("+"+amt+" XP!");save();
+}
+function showLvUp(cfg){
+  document.getElementById("lvPlant").textContent=cfg.plant;
+  document.getElementById("lvTitle").textContent=cfg.name+" 단계로 성장!";
+  document.getElementById("lvSub").textContent=cfg.desc;
+  openM("lvModal");confetti(60);
+}
+function updateHdr(){
+  const cfg=getLevel();
+  const pct=Math.min(100,((S.xp-cfg.min)/(cfg.max===Infinity?1000:cfg.max-cfg.min))*100);
+  document.getElementById("hdrPlant").textContent=cfg.plant;
+  document.getElementById("lvName").textContent=cfg.name+" 단계";
+  document.getElementById("xpDisp").textContent=S.xp+" XP";
+  document.getElementById("xpFill").style.width=pct+"%";
+  document.getElementById("streakN").textContent=S.streak;
+  document.getElementById("lvN").textContent=cfg.idx;
+  document.getElementById("hdrTitle").textContent=(S.name?S.name+"의 ":"")+"행동활성화";
+}
+
+// ─── STREAK ───
+function updateStreak(){
+  const today=todayStr();
+  if(S.lastDate===today)return;
+  const yest=new Date();yest.setDate(yest.getDate()-1);
+  const ys=yest.toISOString().slice(0,10);
+  S.streak=S.lastDate===ys?S.streak+1:1;
+  S.maxStreak=Math.max(S.maxStreak||0,S.streak);
+  S.lastDate=today;save();
+}
+
+// ─── BADGES ───
+function checkBadges(){
+  const e=S.badges;const add=[];
+  if(!e.includes("first")&&S.totalDone>=1)add.push("first");
+  if(!e.includes("three")&&S.streak>=3)add.push("three");
+  if(!e.includes("seven")&&S.streak>=7)add.push("seven");
+  if(!e.includes("ten")&&S.totalDone>=10)add.push("ten");
+  if(!e.includes("thirty")&&S.totalDone>=30)add.push("thirty");
+  if(!e.includes("log5")&&S.logs.length>=5)add.push("log5");
+  const ups=S.logs.filter(l=>l.after>l.before).length;
+  if(!e.includes("moodup")&&ups>=5)add.push("moodup");
+  const doneIds=S.plans.filter(p=>p.done).map(p=>p.actId);
+  const doneTypes=new Set(doneIds.map(id=>{const a=S.acts.find(a=>a.id===id);return a?a.type:null}).filter(Boolean));
+  if(!e.includes("variety")&&doneTypes.size>=4)add.push("variety");
+  add.forEach(b=>{S.badges.push(b);const bd=ALL_BADGES.find(x=>x.id===b);if(bd)toast("🏆 뱃지 획득: "+bd.n+"!");});
+  if(add.length)save();
+}
+
+// ─── CONFETTI ───
+function confetti(n=30){
+  const wrap=document.getElementById("cfWrap");
+  const cols=["#2d8a6e","#e8a820","#e8614d","#4a7fc1","#7c5cbf","#ff6b9d","#56c9a1"];
+  for(let i=0;i<n;i++){
+    const el=document.createElement("div");el.className="cp";
+    el.style.cssText=`left:${Math.random()*100}vw;top:-20px;background:${cols[i%cols.length]};width:${6+Math.random()*7}px;height:${6+Math.random()*7}px;border-radius:${Math.random()>.5?"50%":"2px"};animation-duration:${1.4+Math.random()*2}s;animation-delay:${Math.random()*.6}s;`;
+    wrap.appendChild(el);
+    el.addEventListener("animationend",()=>el.remove());
+  }
+}
+
+// ─── TOAST ───
+let tTimer;
+function toast(msg){
+  let el=document.getElementById("toast");
+  if(!el){el=document.createElement("div");el.id="toast";el.style.cssText="position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:#1a2820;color:#fff;padding:9px 18px;border-radius:99px;font-size:13px;font-weight:600;z-index:800;opacity:0;transition:opacity .2s ease;pointer-events:none;white-space:nowrap";document.body.appendChild(el);}
+  el.textContent=msg;el.style.opacity="1";clearTimeout(tTimer);tTimer=setTimeout(()=>el.style.opacity="0",2200);
+}
+function xpToast(msg){
+  const el=document.createElement("div");el.textContent=msg;
+  el.style.cssText="position:fixed;font-size:17px;font-weight:800;color:#e8a820;text-shadow:0 2px 4px rgba(0,0,0,.25);pointer-events:none;z-index:800;top:75px;right:36px;animation:xpf 1.4s ease forwards;";
+  if(!document.getElementById("xpfStyle")){const st=document.createElement("style");st.id="xpfStyle";st.textContent="@keyframes xpf{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-55px)}}";document.head.appendChild(st);}
+  document.body.appendChild(el);el.addEventListener("animationend",()=>el.remove());
+}
+
+// ─── HOME ───
+function renderHome(){
+  const todayIdx=(new Date().getDay()+6)%7;
+  const todayDay=DAYS[todayIdx];
+  const todayPlans=S.plans.filter(p=>p.day===todayDay);
+  const doneCnt=todayPlans.filter(p=>p.done).length;
+  document.getElementById("stPlanned").textContent=todayPlans.length;
+  document.getElementById("stDone").textContent=doneCnt;
+  document.getElementById("stXP").textContent=S.xp;
+  const now=new Date();
+  document.getElementById("todayDate").textContent=`${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 ${DAY_FULL[todayIdx]}`;
+  const ml=document.getElementById("missionList");
+  if(!todayPlans.length){
+    ml.innerHTML='<div class="empty"><div class="ei">📅</div><p>오늘 계획된 활동이 없어요.<br>주간 계획 탭에서 추가해보세요!</p></div>';
+  } else {
+    ml.innerHTML=todayPlans.map(p=>{
+      const a=S.acts.find(a=>a.id===p.actId);
+      const nm=a?a.name:"삭제된 활동";
+      const xp=a?XP[a.level]:10;
+      return `<div class="mission-item${p.done?" done":""}" onclick="togMission('${p.id}')">
+        <div class="mcheck">${p.done?"✓":""}</div>
+        <div class="mname">${esc(nm)}</div>
+        <span class="mxp">+${xp} XP</span>
+      </div>`;
+    }).join("");
+  }
+  const q=MOTIVS[new Date().getDate()%MOTIVS.length];
+  document.getElementById("motivText").textContent=`"${q.t}"`;
+  document.getElementById("motivAuthor").textContent=q.a;
+}
+
+function togMission(pid){
+  const p=S.plans.find(x=>x.id===pid);if(!p)return;
+  p.done=!p.done;
+  if(p.done){
+    const a=S.acts.find(a=>a.id===p.actId);
+    addXP(a?XP[a.level]:10);
+    S.totalDone=(S.totalDone||0)+1;
+    updateStreak();checkBadges();confetti(20);
+    const td=todayStr();S.hmap[td]=(S.hmap[td]||0)+1;
+  } else {
+    const a=S.acts.find(a=>a.id===p.actId);
+    S.xp=Math.max(0,S.xp-(a?XP[a.level]:10));
+    S.totalDone=Math.max(0,(S.totalDone||0)-1);
+    updateHdr();
+  }
+  save();renderHome();renderWeek();
+}
+
+// ─── ACTIVITIES ───
+function renderFChips(){
+  document.getElementById("fchips").innerHTML=["전체","성취","즐거움","연결","건강"].map(t=>
+    `<button class="fchip${activeFilt===t?" on":""}" onclick="setFilt('${t}')">${t}</button>`).join("");
+}
+function setFilt(f){activeFilt=f;renderFChips();renderActGrid();}
+function renderActGrid(){
+  const list=activeFilt==="전체"?S.acts:S.acts.filter(a=>a.type===activeFilt);
+  const g=document.getElementById("actGrid");
+  if(!list.length){g.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="ei">🔍</div><p>해당 종류의 활동이 없어요.</p></div>';return;}
+  g.innerHTML=list.map(a=>`
+    <div class="act-card${a.sel?" sel":""}" onclick="togAct('${a.id}')">
+      <div class="sel-badge">✓</div>
+      <div class="card-h">
+        <div class="card-name">${esc(a.name)}</div>
+        <span class="ctag t${a.type}">${a.type}</span>
+      </div>
+      <div class="card-meta">
+        <span class="card-time">⏱ ${a.dur||"10분"}</span>
+        <span class="ddots">${[1,2,3].map(n=>`<span class="dd${n<=a.level?" on":""}"></span>`).join("")}</span>
+        <span class="cxp">+${XP[a.level]} XP</span>
+        <span class="tip" tabindex="0">?<span class="tiptext">${esc(a.why||"꾸준히 하면 기분이 달라져요!")}</span></span>
+      </div>
+    </div>`).join("");
+}
+function togAct(id){
+  const a=S.acts.find(a=>a.id===id);if(!a)return;
+  a.sel=!a.sel;save();renderActGrid();renderPlanCtrls();
+}
+document.getElementById("addActBtn").addEventListener("click",()=>{
+  const n=document.getElementById("customAct").value.trim();if(!n)return;
+  S.acts.push({id:uid(),name:n,type:document.getElementById("customType").value,
+    level:Number(document.getElementById("customLv").value),
+    dur:document.getElementById("customTime").value,sel:true,why:"내가 직접 추가한 활동이에요!"});
+  document.getElementById("customAct").value="";save();renderActGrid();renderPlanCtrls();toast("활동이 추가되었어요!");
+});
+
+// ─── PLAN ───
+function renderPlanCtrls(){
+  const sel=S.acts.filter(a=>a.sel);
+  document.getElementById("planAct").innerHTML=sel.length?sel.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join(""):`<option value="">먼저 활동을 선택하세요</option>`;
+  document.getElementById("logAct").innerHTML=sel.length?sel.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join(""):`<option value="">기록할 활동이 없습니다</option>`;
+  const ti=(new Date().getDay()+6)%7;
+  document.getElementById("planDay").innerHTML=DAYS.map((d,i)=>`<option${i===ti?" selected":""}>${d}</option>`).join("");
+}
+document.getElementById("addPlanBtn").addEventListener("click",()=>{
+  const id=document.getElementById("planAct").value;if(!id)return;
+  S.plans.push({id:uid(),actId:id,day:document.getElementById("planDay").value,time:document.getElementById("planTime").value||"10:00",done:false});
+  save();renderWeek();renderHome();toast("계획이 추가되었어요!");
+});
+function renderWeek(){
+  const ti=(new Date().getDay()+6)%7;
+  document.getElementById("weekGrid").innerHTML=DAYS.map((day,idx)=>{
+    const items=S.plans.filter(p=>p.day===day).sort((a,b)=>a.time.localeCompare(b.time));
+    return `<div class="day-col${idx===ti?" today":""}">
+      <div class="day-hdr"><span class="day-name">${day}요일</span><span class="day-cnt">${items.filter(p=>p.done).length}/${items.length}</span></div>
+      <div>${items.map(p=>{const a=S.acts.find(a=>a.id===p.actId);return `
+        <div class="plan-item${p.done?" done":""}">
+          <div class="pi-name">${esc(a?a.name:"삭제된 활동")}</div>
+          <div class="pi-time">${p.time}</div>
+          <div class="pi-acts">
+            <button class="ck-btn" onclick="togPlan('${p.id}')">${p.done?"✓":""}</button>
+            <button class="x-btn" onclick="delPlan('${p.id}')">×</button>
+          </div>
+        </div>`}).join("")||`<div style="font-size:11px;color:var(--text3);text-align:center;padding:10px">비어 있음</div>`}
+      </div>
+    </div>`;
+  }).join("");
+}
+function togPlan(pid){
+  const p=S.plans.find(x=>x.id===pid);if(!p)return;
+  p.done=!p.done;
+  if(p.done){
+    const a=S.acts.find(a=>a.id===p.actId);
+    addXP(a?XP[a.level]:10);
+    S.totalDone=(S.totalDone||0)+1;
+    updateStreak();checkBadges();confetti(20);
+    const td=todayStr();S.hmap[td]=(S.hmap[td]||0)+1;
+  } else {
+    const a=S.acts.find(a=>a.id===p.actId);
+    S.xp=Math.max(0,S.xp-(a?XP[a.level]:10));
+    S.totalDone=Math.max(0,(S.totalDone||0)-1);
+    updateHdr();
+  }
+  save();renderWeek();renderHome();
+}
+function delPlan(pid){S.plans=S.plans.filter(p=>p.id!==pid);save();renderWeek();renderHome();}
+
+// ─── MOOD / LOG ───
+function selMood(type,val,el){
+  const cont=document.getElementById(type==="b"?"bMood":"aMood");
+  cont.querySelectorAll(".mopt").forEach(o=>o.classList.remove("sel"));
+  el.classList.add("sel");
+  if(type==="b")moodB=val;else moodA=val;
+}
+document.getElementById("addLogBtn").addEventListener("click",()=>{
+  const id=document.getElementById("logAct").value;if(!id)return;
+  S.logs.push({id:uid(),actId:id,before:moodB,after:moodA,note:document.getElementById("logNote").value.trim(),date:new Date().toLocaleDateString("ko-KR"),ds:todayStr()});
+  document.getElementById("logNote").value="";
+  checkBadges();save();renderLogs();toast("기록이 추가되었어요!");
+});
+const ME={1:"😣",3:"😔",5:"😐",7:"🙂",9:"😄"};
+function nm(v){const ks=[1,3,5,7,9];return ME[ks.reduce((a,b)=>Math.abs(b-v)<Math.abs(a-v)?b:a)];}
+function renderLogs(){
+  const c=document.getElementById("logCont");
+  if(!S.logs.length){c.innerHTML='<div class="empty"><div class="ei">📋</div><p>아직 기록이 없어요.<br>활동 후 기분을 기록해보세요!</p></div>';return;}
+  c.innerHTML='<div class="log-list">'+S.logs.slice().reverse().map(l=>{
+    const a=S.acts.find(a=>a.id===l.actId);
+    const d=l.after-l.before;const cls=d>0?"up":d<0?"dn":"ne";const sg=d>0?"+":"";
+    return `<div class="log-item">
+      <div class="log-badge">${nm(l.after)}</div>
+      <div class="log-info">
+        <div class="log-name">${esc(a?a.name:"삭제된 활동")}</div>
+        <div class="log-meta">${l.date} · 전 ${nm(l.before)} 후 ${nm(l.after)}</div>
+        ${l.note?`<div class="log-note">${esc(l.note)}</div>`:""}
+      </div>
+      <div class="log-diff ${cls}">${sg}${d}</div>
+      <button class="x-btn" onclick="delLog('${l.id}')">×</button>
+    </div>`;
+  }).join("")+'</div>';
+}
+function delLog(id){S.logs=S.logs.filter(l=>l.id!==id);save();renderLogs();}
+
+// ─── GROWTH ───
+function renderGrowth(){
+  const cfg=getLevel();
+  document.getElementById("growPlant").textContent=cfg.plant;
+  document.getElementById("growLvName").textContent=cfg.name+" 단계 (Lv."+cfg.idx+")";
+  document.getElementById("growDesc").textContent=cfg.desc;
+  const total=S.plans.length,done=S.plans.filter(p=>p.done).length;
+  const avg=S.logs.length?(S.logs.reduce((s,l)=>s+(l.after-l.before),0)/S.logs.length).toFixed(1):"0";
+  document.getElementById("mTotal").textContent=total;
+  document.getElementById("mDone").textContent=done;
+  document.getElementById("mStreak").textContent=S.maxStreak||0;
+  document.getElementById("mMood").textContent=(Number(avg)>=0?"+":"")+avg;
+  // badges
+  document.getElementById("badgesG").innerHTML=ALL_BADGES.map(b=>`
+    <div class="badge-it${S.badges.includes(b.id)?" earned":" locked"}" title="${b.d}">
+      <div class="badge-ic">${b.e}</div>
+      <div class="bn">${b.n}</div>
+    </div>`).join("");
+  // heatmap
+  const hg=document.getElementById("hmapG");
+  const hdrs=DAYS.map(d=>`<div class="hmap-lbl">${d}</div>`).join("");
+  const td=todayStr();const cells=[];
+  const start=new Date();start.setDate(start.getDate()-34);
+  const sd=(start.getDay()+6)%7;
+  for(let i=0;i<sd;i++)cells.push("<div></div>");
+  for(let i=0;i<35-sd;i++){
+    const d=new Date(start);d.setDate(d.getDate()+i);
+    const k=d.toISOString().slice(0,10);
+    const cnt=S.hmap[k]||0;
+    const lv=cnt===0?0:cnt===1?1:cnt===2?2:cnt<=4?3:4;
+    cells.push(`<div class="hmap-cell l${lv}${k===td?" td":""}" title="${k}: ${cnt}개"></div>`);
+  }
+  hg.innerHTML=hdrs+cells.join("");
+  // bar chart
+  const counts=DAYS.map(day=>S.plans.filter(p=>p.day===day&&p.done).length);
+  const mx=Math.max(1,...counts);
+  document.getElementById("barChart").innerHTML=DAYS.map((day,i)=>`
+    <div class="bcol"><div class="bbar" style="height:${Math.max(5,(counts[i]/mx)*100)}%"></div><div class="blbl">${day}</div></div>`).join("");
+  // suggestion
+  const rate=total?done/total:0;
+  document.getElementById("reviewSug").textContent=rate>=.7
+    ?"훌륭해요! 가장 도움 된 활동 하나를 유지하고, 난이도 한 단계 높은 활동을 하나 추가해보세요."
+    :rate>=.35
+      ?"절반만 해도 방향은 맞아요. 다음 주엔 활동 수를 줄이고 시간·장소를 더 구체적으로 정해보세요."
+      :"계획이 현재 에너지보다 컸을 수 있어요. 5분 활동 2개만 넣고 성공 기준을 최대한 낮춰보세요.";
+}
+
+// ─── TEXT INPUTS ───
+const imap={valuesInput:"values",goalInput:"goal",barrierInput:"barrier",ifThenInput:"ifThen"};
+Object.keys(imap).forEach(id=>{
+  const el=document.getElementById(id);if(!el)return;
+  el.value=S[imap[id]]||"";
+  el.addEventListener("input",e=>{S[imap[id]]=e.target.value;save();});
+});
+
+// ─── TOOLBAR ───
+document.getElementById("saveBtn").addEventListener("click",()=>save(true));
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(!confirm("모든 데이터를 초기화할까요? 이 작업은 되돌릴 수 없어요."))return;
+  localStorage.removeItem(SK);location.reload();
+});
+
+// ─── SYNC ───
+function syncAll(){
+  renderHome();renderFChips();renderActGrid();renderPlanCtrls();renderWeek();renderLogs();updateHdr();
+}
+
+// ─── INIT ───
+if(S.done){document.getElementById("obOverlay").classList.add("gone");syncAll();}
+else{if(S.name)document.getElementById("nameInput").value=S.name;}
+</script>
+</body>
+</html>
