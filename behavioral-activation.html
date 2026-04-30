@@ -308,6 +308,7 @@ textarea{min-height:96px;resize:vertical}
   .efab{bottom:14px;right:14px;padding:9px 14px}
   .add-row{grid-template-columns:1fr}
   .hdr-right .btn-sm{display:none}
+  #tourBtn{display:inline-flex}
 }
 @media print{
   .efab,.nav,.hdr,.tbar{display:none!important}
@@ -435,7 +436,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   color:#fff;
   box-shadow:0 8px 18px rgba(24,35,46,.18);
 }
-.sec-hdr,.panel,.stat-c,.missions,.wt,.add-row,.act-card,.plan-add,.day-col,.log-item,.mc,.badges-sec,.hmap-sec,.adv-c,.empty{
+.sec-hdr,.panel,.stat-c,.missions,.quick-card,.wt,.add-row,.act-card,.plan-add,.day-col,.log-item,.mc,.badges-sec,.hmap-sec,.adv-c,.empty{
   background:rgba(255,255,255,.92);
   border:1px solid rgba(220,229,238,.88);
   box-shadow:var(--sh);
@@ -497,6 +498,42 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .stat-c .si .ico{width:20px;height:20px}
 .stat-c .sv{font-size:30px;line-height:1;font-weight:850;position:relative}
 .stat-c .sl{position:relative;color:var(--text2)}
+.quick-flow{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:16px;
+}
+.quick-card{
+  min-height:118px;
+  border-radius:18px;
+  padding:16px;
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:7px;
+  transition:transform var(--tr),box-shadow var(--tr),border-color var(--tr);
+}
+.quick-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(21,137,111,.34);
+  box-shadow:var(--sh-md);
+}
+.quick-step{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:var(--surface2);
+  color:var(--green-dark);
+  font-size:12px;
+  font-weight:900;
+}
+.quick-card strong{font-size:15px;color:var(--text)}
+.quick-card small{font-size:12px;color:var(--text3);line-height:1.5}
+.quick-card.primary .quick-step{background:var(--green);color:#fff}
 .safety{
   background:rgba(255,247,235,.92);
   border:1px solid #f6d49b;
@@ -521,6 +558,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   border-radius:20px;
   box-shadow:var(--sh-md);
 }
+.motiv-card{margin-bottom:14px}
 label{color:var(--text2);letter-spacing:0;text-transform:none}
 textarea,input[type="text"],input[type="time"],select,.ob-input{
   background:#fff;
@@ -539,6 +577,7 @@ textarea:focus,input[type="text"]:focus,input[type="time"]:focus,select:focus,.o
   min-height:38px;
 }
 .btn .ico,.btn-pri .ico{width:16px;height:16px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
 .btn-g,.btn-pri{
   background:linear-gradient(135deg,var(--green),var(--green-dark));
   box-shadow:0 9px 18px rgba(21,137,111,.2);
@@ -687,8 +726,40 @@ textarea:focus,input[type="text"]:focus,input[type="time"]:focus,select:focus,.o
   gap:8px;
 }
 .modal-t .ico,.ci .ico{width:20px;height:20px;color:var(--coral)}
+.tour-ov{
+  position:fixed;
+  inset:0;
+  z-index:650;
+  background:rgba(13,22,32,.58);
+  backdrop-filter:blur(3px);
+}
+.tour-ov.gone{display:none}
+.tour-card{
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  transform:translateX(-50%);
+  width:min(460px,calc(100vw - 28px));
+  background:#fff;
+  border:1px solid rgba(255,255,255,.72);
+  border-radius:20px;
+  padding:20px;
+  box-shadow:var(--sh-lg);
+  z-index:700;
+}
+.tour-kicker{font-size:12px;font-weight:850;color:var(--green);margin-bottom:7px}
+.tour-title{font-size:19px;font-weight:900;margin-bottom:6px}
+.tour-desc{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px}
+.tour-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.tour-focus{
+  position:relative!important;
+  z-index:670!important;
+  box-shadow:0 0 0 4px rgba(21,137,111,.22),0 22px 70px rgba(0,0,0,.22)!important;
+  border-radius:18px;
+}
 @media(max-width:960px){
   .nav{top:82px}
+  .quick-flow{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:600px){
   .app{padding:14px 12px 62px}
@@ -700,6 +771,9 @@ textarea:focus,input[type="text"]:focus,input[type="time"]:focus,select:focus,.o
   .stat-c{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center}
   .stat-c .si{margin:0}
   .stat-c .sl{grid-column:2}
+  .quick-flow{grid-template-columns:1fr}
+  .quick-card{min-height:auto}
+  .tour-card{bottom:14px}
 }
 @media print{
   body{background:#fff}
@@ -793,6 +867,20 @@ textarea:focus,input[type="text"]:focus,input[type="time"]:focus,select:focus,.o
 <!-- CONFETTI -->
 <div class="confetti-wrap" id="cfWrap"></div>
 
+<!-- TUTORIAL -->
+<div class="tour-ov gone" id="tourOverlay">
+  <div class="tour-card">
+    <div class="tour-kicker" id="tourStepLabel">1 / 7</div>
+    <div class="tour-title" id="tourTitle">오늘 화면</div>
+    <div class="tour-desc" id="tourDesc">오늘 해야 할 일을 한눈에 보고 바로 시작할 수 있어요.</div>
+    <div class="tour-actions">
+      <button class="btn btn-o btn-sm" id="tourSkipBtn">건너뛰기</button>
+      <button class="btn btn-o btn-sm" id="tourPrevBtn">이전</button>
+      <button class="btn btn-g btn-sm" id="tourNextBtn">다음</button>
+    </div>
+  </div>
+</div>
+
 <!-- APP -->
 <div class="app">
   <header class="hdr">
@@ -810,27 +898,33 @@ textarea:focus,input[type="text"]:focus,input[type="time"]:focus,select:focus,.o
     <div class="hdr-right">
       <div class="sbadge fire"><svg class="ico"><use href="#i-flame"></use></svg><span id="streakN">0</span>일</div>
       <div class="sbadge lv">Lv.<span id="lvN">1</span></div>
+      <button class="btn btn-o btn-sm" id="tourBtn"><svg class="ico"><use href="#i-light"></use></svg>튜토리얼</button>
       <button class="btn btn-o btn-sm" id="saveBtn"><svg class="ico"><use href="#i-save"></use></svg>저장</button>
       <button class="btn btn-d btn-sm" id="resetBtn"><svg class="ico"><use href="#i-refresh"></use></svg>초기화</button>
     </div>
   </header>
 
   <nav class="nav">
-    <button class="nav-btn active" data-tab="home"><svg class="ico"><use href="#i-home"></use></svg>홈</button>
-    <button class="nav-btn" data-tab="values"><svg class="ico"><use href="#i-diamond"></use></svg>가치</button>
-    <button class="nav-btn" data-tab="activities"><svg class="ico"><use href="#i-zap"></use></svg>활동</button>
+    <button class="nav-btn active" data-tab="home"><svg class="ico"><use href="#i-home"></use></svg>오늘</button>
     <button class="nav-btn" data-tab="plan"><svg class="ico"><use href="#i-calendar"></use></svg>계획</button>
     <button class="nav-btn" data-tab="log"><svg class="ico"><use href="#i-edit"></use></svg>기록</button>
+    <button class="nav-btn" data-tab="activities"><svg class="ico"><use href="#i-zap"></use></svg>활동</button>
+    <button class="nav-btn" data-tab="values"><svg class="ico"><use href="#i-diamond"></use></svg>가치</button>
     <button class="nav-btn" data-tab="growth"><svg class="ico"><use href="#i-tree"></use></svg>성장</button>
   </nav>
 
   <!-- HOME -->
   <section class="sec active" id="sec-home">
-    <div class="safety">⚠️ 이 도구는 진단·치료를 대신하지 않습니다. 자해·자살 충동이 있다면 즉시 전문가 도움을 받으세요 (우측 하단 버튼).</div>
     <div class="home-stats">
       <div class="stat-c"><div class="si"><svg class="ico"><use href="#i-target"></use></svg></div><div class="sv" id="stPlanned">0</div><div class="sl">오늘 계획</div></div>
       <div class="stat-c"><div class="si"><svg class="ico"><use href="#i-check"></use></svg></div><div class="sv" id="stDone">0</div><div class="sl">오늘 완료</div></div>
       <div class="stat-c"><div class="si"><svg class="ico"><use href="#i-star"></use></svg></div><div class="sv" id="stXP">0</div><div class="sl">총 XP</div></div>
+    </div>
+    <div class="quick-flow">
+      <button class="quick-card primary" onclick="jumpTo('plan','#sec-plan .plan-add')"><span class="quick-step">1</span><strong>계획 세우기</strong><small>오늘 할 활동과 시간을 정해요</small></button>
+      <button class="quick-card" onclick="jumpTo('home','#missionList')"><span class="quick-step">2</span><strong>완료 체크</strong><small>오늘의 미션에서 실행을 표시해요</small></button>
+      <button class="quick-card" onclick="jumpTo('log','#sec-log .panel')"><span class="quick-step">3</span><strong>기분 기록</strong><small>활동 전후 변화를 남겨요</small></button>
+      <button class="quick-card" onclick="jumpTo('activities','#sec-activities .add-row')"><span class="quick-step">+</span><strong>활동 고르기</strong><small>너무 크지 않은 행동을 추가해요</small></button>
     </div>
     <div class="missions">
       <div class="missions-title">오늘의 미션</div>
@@ -841,6 +935,7 @@ textarea:focus,input[type="text"]:focus,input[type="time"]:focus,select:focus,.o
       <div class="motiv-text" id="motivText"></div>
       <div class="motiv-author" id="motivAuthor"></div>
     </div>
+    <div class="safety">⚠️ 이 도구는 진단·치료를 대신하지 않습니다. 자해·자살 충동이 있다면 즉시 전문가 도움을 받으세요 (우측 하단 버튼).</div>
   </section>
 
   <!-- VALUES -->
@@ -1033,6 +1128,7 @@ let moodB = 5, moodA = 5;
 let activeFilt = "전체";
 let selEnergy = "med";
 let selRecs = [];
+let tourI = 0;
 
 function uid(){return `id-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}
 function load(){
@@ -1045,6 +1141,15 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
 function todayStr(){return new Date().toISOString().slice(0,10)}
 function iconSvg(id){return `<svg class="ico"><use href="#i-${id}"></use></svg>`}
 const BADGE_ICONS={first:"check",three:"flame",seven:"zap",ten:"diamond",thirty:"award",variety:"star",log5:"edit",moodup:"light"};
+const TOUR_STEPS=[
+  {tab:"home",target:"#sec-home .quick-flow",title:"오늘 할 일부터 시작해요",desc:"첫 화면은 오늘의 계획, 완료 수, 빠른 실행 버튼을 먼저 보여줍니다. 막히면 여기서 계획이나 기록으로 바로 이동하세요."},
+  {tab:"plan",target:"#sec-plan .plan-add",title:"활동을 시간에 배치해요",desc:"행동활성화는 '언젠가'보다 '무슨 요일 몇 시'가 훨씬 잘 됩니다. 작게 하나만 넣어도 충분해요."},
+  {tab:"home",target:"#missionList",title:"완료는 오늘 화면에서 체크해요",desc:"계획한 활동은 오늘의 미션에 모입니다. 실행했다면 여기서 체크하고 작은 보상을 받으세요."},
+  {tab:"log",target:"#sec-log .panel",title:"기분 변화를 짧게 기록해요",desc:"활동 전후 기분을 남기면 어떤 행동이 나에게 도움이 되는지 보이기 시작합니다."},
+  {tab:"activities",target:"#sec-activities .add-row",title:"활동은 필요할 때 추가해요",desc:"기본 활동이 맞지 않으면 직접 추가하세요. 너무 쉬워 보이는 행동일수록 시작에는 좋습니다."},
+  {tab:"values",target:"#sec-values .values-g",title:"가치는 방향을 잡아줘요",desc:"왜 이 활동을 하는지 적어두면 무기력할 때 다시 돌아올 기준점이 됩니다."},
+  {tab:"growth",target:"#sec-growth .grow-hdr",title:"성장은 마지막에 확인해요",desc:"완료, 기록, 스트릭은 성장 화면에 모입니다. 평가보다 조정에 가깝게 봐주세요."}
+];
 
 // ─── ONBOARDING ───
 function ob2(){
@@ -1083,6 +1188,7 @@ function finishOb(){
   S.done=true;save();
   document.getElementById("obOverlay").classList.add("gone");
   syncAll();
+  setTimeout(()=>startTour(),450);
 }
 
 // ─── MODALS ───
@@ -1095,6 +1201,57 @@ function switchTab(id){
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
   document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("active",s.id==="sec-"+id));
   if(id==="growth")renderGrowth();
+}
+function jumpTo(tab,selector){
+  switchTab(tab);
+  setTimeout(()=>{
+    const target=document.querySelector(selector);
+    if(target)target.scrollIntoView({behavior:"smooth",block:"center"});
+  },80);
+}
+
+// ─── TUTORIAL ───
+function clearTourFocus(){
+  document.querySelectorAll(".tour-focus").forEach(el=>el.classList.remove("tour-focus"));
+}
+function startTour(force=false){
+  if(!force&&S.tourDone)return;
+  tourI=0;
+  document.getElementById("tourOverlay").classList.remove("gone");
+  renderTour();
+}
+function renderTour(){
+  clearTourFocus();
+  const st=TOUR_STEPS[tourI];
+  switchTab(st.tab);
+  document.getElementById("tourStepLabel").textContent=`${tourI+1} / ${TOUR_STEPS.length}`;
+  document.getElementById("tourTitle").textContent=st.title;
+  document.getElementById("tourDesc").textContent=st.desc;
+  const prev=document.getElementById("tourPrevBtn");
+  prev.disabled=tourI===0;
+  document.getElementById("tourNextBtn").textContent=tourI===TOUR_STEPS.length-1?"완료":"다음";
+  setTimeout(()=>{
+    const target=document.querySelector(st.target);
+    if(!target)return;
+    target.classList.add("tour-focus");
+    target.scrollIntoView({behavior:"smooth",block:"center"});
+  },80);
+}
+function endTour(){
+  document.getElementById("tourOverlay").classList.add("gone");
+  clearTourFocus();
+  S.tourDone=true;
+  save();
+}
+function nextTour(){
+  if(tourI>=TOUR_STEPS.length-1){endTour();return;}
+  tourI+=1;
+  renderTour();
+}
+function prevTour(){
+  if(tourI===0)return;
+  tourI-=1;
+  renderTour();
 }
 
 // ─── LEVEL ───
@@ -1408,6 +1565,10 @@ Object.keys(imap).forEach(id=>{
 });
 
 // ─── TOOLBAR ───
+document.getElementById("tourBtn").addEventListener("click",()=>startTour(true));
+document.getElementById("tourSkipBtn").addEventListener("click",endTour);
+document.getElementById("tourPrevBtn").addEventListener("click",prevTour);
+document.getElementById("tourNextBtn").addEventListener("click",nextTour);
 document.getElementById("saveBtn").addEventListener("click",()=>save(true));
 document.getElementById("resetBtn").addEventListener("click",()=>{
   if(!confirm("모든 데이터를 초기화할까요? 이 작업은 되돌릴 수 없어요."))return;
@@ -1420,7 +1581,7 @@ function syncAll(){
 }
 
 // ─── INIT ───
-if(S.done){document.getElementById("obOverlay").classList.add("gone");syncAll();}
+if(S.done){document.getElementById("obOverlay").classList.add("gone");syncAll();setTimeout(()=>startTour(),600);}
 else{if(S.name)document.getElementById("nameInput").value=S.name;}
 </script>
 </body>
