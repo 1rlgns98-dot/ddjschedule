@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/behavioral-activation.html" }
+    { "source": "/", "destination": "/worship-schedule.html" }
   ]
 }

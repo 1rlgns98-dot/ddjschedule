@@ -1,0 +1,408 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>찬양팀 예배 스케줄</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fff7ed;--bg2:#ecfeff;--card:#fff;--ink:#172033;--muted:#64748b;--soft:#e2e8f0;
+  --tint:#2563eb;--pink:#ec4899;--orange:#f97316;--green:#16a34a;--purple:#8b5cf6;
+  --red:#ef4444;--yellow:#facc15;--cyan:#06b6d4;--shadow:0 14px 36px rgba(37,99,235,.13);
+  --r:18px;--rs:12px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;color:var(--ink);
+  min-height:100vh;background:
+  radial-gradient(circle at 12% 0%,rgba(250,204,21,.28),transparent 28%),
+  radial-gradient(circle at 92% 12%,rgba(6,182,212,.2),transparent 30%),
+  linear-gradient(145deg,var(--bg),var(--bg2));padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.navbar{position:sticky;top:0;z-index:20;padding:18px 18px 12px;background:rgba(255,255,255,.72);
+  backdrop-filter:blur(18px);border-bottom:1px solid rgba(148,163,184,.22)}
+.navbar-title{max-width:760px;margin:0 auto;font-size:25px;font-weight:850}
+.main{max-width:760px;margin:0 auto;padding:16px}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:rgba(255,255,255,.88);
+  backdrop-filter:blur(18px);border-top:1px solid rgba(148,163,184,.24);padding:8px 6px max(14px,env(safe-area-inset-bottom))}
+.tab-item{flex:1;border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:11px;font-weight:800;padding:5px 0;border-radius:14px}
+.tab-item.on{color:var(--tint);background:#dbeafe}
+.tab-icon{width:23px;height:23px}
+.wknav,.section,.svc,.formsec,.autopanel,.asgned,.statcard,.srchbox,.homehero,.quickgrid .quickbtn,.homecard{background:rgba(255,255,255,.94);border:1px solid rgba(148,163,184,.18);box-shadow:var(--shadow)}
+.wknav{display:flex;align-items:center;gap:12px;border-radius:var(--r);padding:14px;margin-bottom:16px}
+.wkarr{width:38px;height:38px;border:0;border-radius:50%;background:#eff6ff;color:var(--tint);font-size:22px;font-weight:900}
+.wkinfo{flex:1;text-align:center}.wktitle{font-weight:850;font-size:18px}.wkrange{font-size:13px;color:var(--muted);margin-top:2px}
+.wktoday{border:0;background:#fef3c7;color:#a16207;border-radius:99px;padding:5px 12px;margin-top:7px;font-size:12px;font-weight:850}
+.daylbl,.sec-label{font-size:13px;font-weight:850;color:var(--muted);letter-spacing:.02em;margin:18px 4px 8px}
+.svc{border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.svc-head{display:flex;align-items:center;gap:13px;padding:15px;user-select:none}
+.svc-date{width:48px;text-align:center;border-radius:14px;padding:8px 4px;background:#eff6ff;color:var(--tint)}
+.svc-daynum{font-size:27px;line-height:1;font-weight:900}.svc-dayname{font-size:11px;font-weight:800;margin-top:2px}
+.svc-mid{flex:1;min-width:0}.svc-title{font-size:17px;font-weight:850}.svc-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.svc-pill{background:#fce7f3;color:#be185d;border-radius:99px;padding:5px 10px;font-size:12px;font-weight:900}.chevron{color:var(--muted);transition:.2s}
+.svc.open .chevron{transform:rotate(90deg)}.svc-body{display:none;border-top:1px solid var(--soft);padding:10px 15px 15px}.svc.open .svc-body{display:block}
+.ar,.rankrow,.row,.mrow,.automrow,.aeditrow{display:flex;align-items:center;gap:10px}
+.ar{padding:8px 0}.ar+.ar{border-top:1px solid #eef2f7}.arname{flex:1;font-weight:750}
+.av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;flex-shrink:0}
+.av.sm{width:30px;height:30px;font-size:12px}.av.lg{width:46px;height:46px;font-size:18px}
+.av0{background:#2563eb}.av1{background:#ec4899}.av2{background:#16a34a}.av3{background:#f97316}
+.av4{background:#ef4444}.av5{background:#06b6d4}.av6{background:#8b5cf6}.av7{background:#14b8a6}
+.chip{display:inline-flex;align-items:center;border-radius:99px;padding:4px 10px;font-size:12px;font-weight:850;white-space:nowrap}
+.iv{background:#fce7f3;color:#be185d}.ig{background:#dcfce7;color:#166534}.ib{background:#dbeafe;color:#1d4ed8}
+.id{background:#fef3c7;color:#a16207}.ik{background:#ede9fe;color:#6d28d9}.istr{background:#fee2e2;color:#b91c1c}
+.iso{background:#cffafe;color:#0e7490}.icel{background:#fae8ff;color:#a21caf}.ix{background:#f1f5f9;color:#475569}
+.note{background:#fff7ed;color:#9a3412;border-radius:12px;padding:10px;margin-bottom:8px;font-size:13px;line-height:1.45}
+.actrow{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #eef2f7;flex-wrap:wrap}
+.btn{border:0;border-radius:13px;display:inline-flex;justify-content:center;align-items:center;gap:6px;font-weight:850;transition:.12s}
+.btn:active,.wkarr:active,.fab:active{transform:scale(.96)}.btn-fill{width:100%;padding:14px 18px;background:linear-gradient(135deg,#2563eb,#06b6d4);color:#fff}
+.btn-tint{padding:9px 14px;background:#dbeafe;color:#1d4ed8}.btn-gray{padding:9px 14px;background:#f1f5f9;color:#334155}
+.btn-red{padding:9px 14px;background:#fee2e2;color:#b91c1c}.btn-sm{font-size:13px;padding:7px 12px}
+.fab{position:fixed;right:20px;bottom:calc(88px + env(safe-area-inset-bottom));z-index:15;width:56px;height:56px;border-radius:50%;border:0;
+  background:linear-gradient(135deg,#ec4899,#f97316);color:#fff;font-size:30px;box-shadow:0 14px 30px rgba(236,72,153,.28)}
+.empty{text-align:center;padding:52px 28px}.emptyicon{font-size:42px}.emptytitle{font-size:20px;font-weight:900;margin:10px 0 6px}.emptysub{color:var(--muted);line-height:1.5;margin-bottom:20px}
+.homehero{border-radius:24px;padding:22px;margin-bottom:16px;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(236,254,255,.94))}
+.homeeyebrow{color:var(--pink);font-size:13px;font-weight:900;margin-bottom:6px}.hometitle{font-size:28px;font-weight:950;line-height:1.12}.homesub{color:var(--muted);line-height:1.5;margin-top:8px}
+.quickgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.quickbtn{border-radius:18px;border:0;padding:16px;text-align:left;color:var(--ink);min-height:92px}
+.quickicon{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:950;margin-bottom:9px}.quicktitle{font-weight:900}.quicksub{font-size:12px;color:var(--muted);margin-top:3px}
+.homegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.homecard{border-radius:18px;padding:16px}.homebig{font-size:30px;font-weight:950;color:var(--tint)}.homelbl{font-size:13px;color:var(--muted);margin-top:2px}
+.versecard{border-radius:22px;padding:18px;margin-bottom:18px;background:linear-gradient(135deg,#fff7ed,#fef3c7);border:1px solid rgba(249,115,22,.18);box-shadow:var(--shadow)}
+.versetop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.verseref{font-size:13px;font-weight:950;color:#c2410c}.versequote{font-size:22px;font-weight:950;color:#172033;margin-bottom:10px}.versetext{font-size:17px;font-weight:850;line-height:1.55;color:#172033;margin-bottom:10px}.versemsg{font-size:16px;font-weight:800;line-height:1.45;color:#7c2d12}.verselabel{font-size:12px;font-weight:900;color:#c2410c;margin-bottom:4px}.versecontrols{display:flex;gap:6px;flex-shrink:0}.versebtn{width:34px;height:34px;border:0;border-radius:50%;background:#fed7aa;color:#9a3412;font-size:18px;font-weight:950}
+.home-next{cursor:pointer}.home-next .row{align-items:flex-start}.home-detail{padding:0 16px 15px;color:var(--muted);font-size:14px;line-height:1.55}.home-detail .arname{color:var(--ink)}
+.section{border-radius:var(--r);overflow:hidden}.mrow,.row,.rankrow{padding:14px 16px}.mrow+.mrow,.row+.row,.rankrow+.rankrow{border-top:1px solid #eef2f7}
+.mrname{font-size:17px;font-weight:850}.mrdays,.mroverride{font-size:12px;color:var(--muted);margin-top:4px}.chiprow{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.srchbox{border-radius:var(--r);padding:11px 14px;display:flex;gap:8px;margin-bottom:15px}.srchbox input{flex:1;border:0;outline:0;background:transparent;font-size:16px}
+.statrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}.statcard{border-radius:var(--r);padding:18px;text-align:center}.statnum{font-size:36px;font-weight:900;color:var(--pink)}.statlbl{color:var(--muted);font-size:13px}
+.rankn{width:24px;color:var(--tint);font-weight:900}.rankcnt{margin-left:auto;background:#fef3c7;color:#a16207;border-radius:99px;padding:4px 9px;font-size:12px;font-weight:900}
+.barrow{margin:0 0 12px}.barhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.barbg{height:8px;background:#e2e8f0;border-radius:99px;overflow:hidden}.barfill{height:100%;background:linear-gradient(90deg,#ec4899,#f97316,#06b6d4)}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:60;display:none;align-items:flex-end;justify-content:center;opacity:0;transition:.2s;backdrop-filter:blur(4px)}
+.overlay.show{opacity:1}.sheet,.cfmsheet{width:100%;max-width:760px;max-height:94vh;overflow-y:auto;background:linear-gradient(180deg,#ffffff,#f8fafc);border-radius:24px 24px 0 0;padding-bottom:max(24px,env(safe-area-inset-bottom));transform:translateY(100%);transition:.28s}
+.overlay.show .sheet,.overlay.show .cfmsheet{transform:translateY(0)}.sheethandle{width:38px;height:4px;background:#cbd5e1;border-radius:99px;margin:12px auto 5px}
+.sheethdr{display:flex;justify-content:space-between;align-items:center;padding:12px 18px 14px}.sheettitle{font-size:21px;font-weight:900}.sheetclose{width:32px;height:32px;border:0;border-radius:50%;background:#e2e8f0;color:#475569;font-weight:900}
+.sheetpad{padding:0 16px}.formsec,.autopanel,.asgned{border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:none}
+.frow{display:flex;align-items:center;gap:12px;padding:13px 15px}.frow+.frow{border-top:1px solid #eef2f7}.flbl{width:82px;font-weight:800}.finput{flex:1;border:0;outline:0;background:transparent;text-align:right;font-size:16px;min-width:0}
+.fsublbl{padding:13px 15px 8px;color:var(--muted);font-size:14px;font-weight:850}.presets{display:flex;flex-wrap:wrap;gap:7px;padding:0 15px 13px}
+.pchip{border:0;border-radius:99px;background:#f1f5f9;color:#334155;padding:8px 13px;font-size:13px;font-weight:800}.pchip.on{background:#dbeafe;color:#1d4ed8}
+.daypick{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;padding:2px 15px 14px}.daybtn{aspect-ratio:1;border:0;border-radius:50%;background:#f1f5f9;color:#64748b;font-weight:900}.daybtn.on{background:var(--tint);color:#fff}
+.month-tools{display:flex;gap:8px;padding:0 15px 12px}.month-tools input{flex:1;border:1px solid #dbe3ef;border-radius:12px;padding:9px;background:#fff;color:var(--ink)}
+.monthgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:0 15px 14px}.mhead{text-align:center;color:var(--muted);font-size:11px;font-weight:900}
+.mday{min-height:44px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;color:#334155;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.mday.blank{visibility:hidden}.mday.yes{background:#dcfce7;border-color:#86efac;color:#166534}.mday.no{background:#fee2e2;border-color:#fecaca;color:#b91c1c}
+.mday small{font-size:10px;font-weight:850}.legend{display:flex;gap:8px;flex-wrap:wrap;padding:0 15px 13px;color:var(--muted);font-size:12px}
+.monthcal{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-bottom:16px}.calhead{text-align:center;color:var(--muted);font-size:11px;font-weight:950}.calday{min-height:82px;border:1px solid rgba(148,163,184,.22);border-radius:14px;background:rgba(255,255,255,.94);padding:8px;display:flex;flex-direction:column;gap:5px;box-shadow:0 8px 20px rgba(37,99,235,.07)}.calday.blank{visibility:hidden}.calday.today{border-color:#f97316;background:#fff7ed}.calnum{font-size:13px;font-weight:950;color:var(--muted)}.calday.today .calnum{color:#c2410c}.calitem{border:0;border-radius:9px;background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:850;padding:4px 5px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.calmore{font-size:10px;color:var(--muted);font-weight:850}
+.autopanelhdr,.asgnedhdr{padding:13px 15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #eef2f7}.autoicon{width:34px;height:34px;border-radius:10px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-weight:900;color:#a16207}
+.autoinfo{flex:1}.autotitle,.asgnedhdr-title{font-weight:900}.autosub{font-size:13px;color:var(--muted);margin-top:2px}.automrow{padding:11px 15px}.automrow+.automrow,.aeditrow+.aeditrow{border-top:1px solid #eef2f7}
+.autocheck{width:22px;height:22px;border-radius:50%;border:2px solid #cbd5e1;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900}.autocheck.on{background:#16a34a;border-color:#16a34a;color:#fff}
+.autoname{flex:1;font-weight:800}.autopanelftr{display:flex;gap:8px;padding:12px 15px;border-top:1px solid #eef2f7}.asgnedhdr{justify-content:space-between}.asgncnt{color:var(--muted);font-size:14px}
+.aeditrow{padding:10px 15px}.noasgn{padding:20px;text-align:center;color:var(--muted)}.addmrow{display:flex;padding:11px 15px;border-top:1px solid #eef2f7}.mbrsel{width:100%;border:0;background:transparent;color:var(--tint);font-weight:850;outline:0}
+.instquick{display:flex;flex-wrap:wrap;gap:7px;padding:10px 15px;background:#f8fafc;border-top:1px solid #eef2f7}.iqlbl{width:100%;font-size:12px;color:var(--muted)}.iqbtn{border:0;border-radius:99px;background:#f1f5f9;padding:7px 12px;font-weight:800}
+.rmbtn{width:26px;height:26px;border:0;border-radius:50%;background:#ef4444;color:#fff;font-weight:900}.cfmsheet{padding:20px}.cfmtitle{font-size:20px;font-weight:900;margin-bottom:8px}.cfmsub{color:var(--muted);line-height:1.5;margin-bottom:18px}
+@media(max-width:430px){.main{padding:14px 12px}.svc-head{gap:10px}.svc-pill{display:none}.flbl{width:70px}.monthgrid{gap:5px}.mday{min-height:40px;border-radius:10px}}
+</style>
+</head>
+<body>
+<header class="navbar"><div class="navbar-title">찬양팀 예배 스케줄</div></header>
+<main class="main" id="main"></main>
+
+<nav class="tabbar">
+  <button class="tab-item on" data-tab="home" aria-label="홈">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1v-9.5Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
+    홈
+  </button>
+  <button class="tab-item" data-tab="schedule" aria-label="일정">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="3" stroke="currentColor" stroke-width="1.9"/><path d="M8 2v4M16 2v4M3 10h18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="8" cy="15" r="1.2" fill="currentColor"/><circle cx="12" cy="15" r="1.2" fill="currentColor"/><circle cx="16" cy="15" r="1.2" fill="currentColor"/></svg>
+    일정
+  </button>
+  <button class="tab-item" data-tab="month" aria-label="월간">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="3" stroke="currentColor" stroke-width="1.9"/><path d="M3 10h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/></svg>
+    월간
+  </button>
+  <button class="tab-item" data-tab="members" aria-label="팀원">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7.5" r="3.5" stroke="currentColor" stroke-width="1.9"/><path d="M2 20c0-4 3.1-7 7-7s7 3 7 7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="17" cy="7.5" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 16c.5-.3 1-.5 1.5-.5 2.8 0 5 2 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    팀원
+  </button>
+  <button class="tab-item" data-tab="stats" aria-label="통계">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="13" width="4" height="8" rx="1.5" fill="currentColor"/><rect x="10" y="8" width="4" height="13" rx="1.5" fill="currentColor"/><rect x="17" y="3" width="4" height="18" rx="1.5" fill="currentColor"/></svg>
+    통계
+  </button>
+</nav>
+
+<div class="overlay" id="svc-ov">
+  <div class="sheet">
+    <div class="sheethandle"></div>
+    <div class="sheethdr"><div class="sheettitle" id="svc-title-hdr">예배 추가</div><button class="sheetclose" onclick="closeOv('svc-ov')">x</button></div>
+    <div class="sheetpad">
+      <div class="formsec">
+        <div class="frow"><span class="flbl">날짜</span><input type="date" class="finput" id="svc-date"></div>
+        <div class="frow"><span class="flbl">예배명</span><input type="text" class="finput" id="svc-name" placeholder="주일 1부 예배"></div>
+        <div class="frow"><span class="flbl">메모</span><input type="text" class="finput" id="svc-note" placeholder="선택"></div>
+      </div>
+      <div class="presets" id="svc-presets">
+        <button class="pchip" data-v="주일 1부 예배">주일 1부</button><button class="pchip" data-v="주일 2부 예배">주일 2부</button>
+        <button class="pchip" data-v="주일 3부 예배">주일 3부</button><button class="pchip" data-v="수요 예배">수요예배</button>
+        <button class="pchip" data-v="금요 기도회">금요기도회</button><button class="pchip" data-v="특별 집회">특별집회</button>
+      </div>
+      <div class="autopanel">
+        <div class="autopanelhdr"><div class="autoicon">A</div><div class="autoinfo"><div class="autotitle">가능 팀원 자동 추천</div><div class="autosub" id="auto-sub">날짜를 선택하면 가능한 팀원이 표시됩니다</div></div><button class="btn btn-tint btn-sm" id="auto-all" style="display:none">전체 추가</button></div>
+        <div id="auto-list"></div><div class="autopanelftr" id="auto-ftr" style="display:none"><button class="btn btn-tint" style="flex:1" id="auto-sel">선택 팀원 추가</button></div>
+      </div>
+      <div class="asgned">
+        <div class="asgnedhdr"><span class="asgnedhdr-title">배정 목록</span><span class="asgncnt" id="asgn-cnt">0명</span></div>
+        <div id="asgn-list"><div class="noasgn">배정된 팀원이 없습니다</div></div>
+        <div class="addmrow"><select class="mbrsel" id="mbr-sel"><option value="">+ 팀원 직접 추가...</option></select></div>
+        <div class="instquick" id="inst-quick" style="display:none"><span class="iqlbl">악기를 선택하세요</span></div>
+      </div>
+      <button class="btn btn-fill" id="svc-save" style="margin-bottom:8px">저장</button>
+      <button class="btn btn-red" id="svc-del" style="width:100%;margin-top:10px;display:none">예배 삭제</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="mbr-ov">
+  <div class="sheet">
+    <div class="sheethandle"></div>
+    <div class="sheethdr"><div class="sheettitle" id="mbr-title-hdr">팀원 추가</div><button class="sheetclose" onclick="closeOv('mbr-ov')">x</button></div>
+    <div class="sheetpad">
+      <div class="formsec"><div class="frow"><span class="flbl">이름</span><input type="text" class="finput" id="mbr-name" placeholder="이름 입력"></div></div>
+      <div class="formsec">
+        <div class="fsublbl">담당 악기 <span style="font-weight:500;color:#94a3b8">(첫 번째가 기본 악기)</span></div>
+        <div class="presets" id="inst-grid"></div>
+        <div class="frow"><span class="flbl" style="color:var(--muted)">직접입력</span><input type="text" class="finput" id="custom-inst" placeholder="Enter로 추가"></div>
+      </div>
+      <div class="formsec">
+        <div class="fsublbl">정기 참여 요일 <span style="font-weight:500;color:#94a3b8">(기본 가능 요일)</span></div>
+        <div class="daypick" id="day-pick">
+          <button class="daybtn" data-d="0">일</button><button class="daybtn" data-d="1">월</button><button class="daybtn" data-d="2">화</button><button class="daybtn" data-d="3">수</button><button class="daybtn" data-d="4">목</button><button class="daybtn" data-d="5">금</button><button class="daybtn" data-d="6">토</button>
+        </div>
+      </div>
+      <div class="formsec">
+        <div class="fsublbl">월간 가능/불가능 날짜 <span style="font-weight:500;color:#94a3b8">(클릭: 가능 -> 불가능 -> 기본)</span></div>
+        <div class="month-tools"><input type="month" id="avail-month"><button class="btn btn-gray btn-sm" id="month-prev">이전</button><button class="btn btn-gray btn-sm" id="month-next">다음</button></div>
+        <div class="legend"><span>초록: 가능</span><span>빨강: 불가능</span><span>흰색: 정기 요일 기준</span></div>
+        <div class="monthgrid" id="month-grid"></div>
+      </div>
+      <button class="btn btn-fill" id="mbr-save">저장</button>
+      <button class="btn btn-red" id="mbr-del" style="width:100%;margin-top:10px;display:none">팀원 삭제</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="cfm-ov">
+  <div class="cfmsheet">
+    <div class="sheethandle"></div><div class="cfmtitle" id="cfm-title">삭제</div><div class="cfmsub" id="cfm-sub">삭제하시겠습니까?</div>
+    <div style="display:flex;gap:10px"><button class="btn btn-gray" style="flex:1;padding:14px" onclick="closeOv('cfm-ov')">취소</button><button class="btn btn-red" style="flex:1;padding:14px" id="cfm-ok">삭제</button></div>
+  </div>
+</div>
+
+<script>
+const KEY='worship-v3';
+const OLD_KEYS=['worship-v2'];
+const DAYS=['일','월','화','수','목','금','토'];
+const INST_LIST=['보컬','리드보컬','코러스','어쿠스틱 기타','일렉 기타','베이스','드럼','피아노','키보드','바이올린','첼로','트럼펫','색소폰','음향','영상'];
+const ICLS={'보컬':'iv','리드보컬':'iv','코러스':'iv','어쿠스틱 기타':'ig','일렉 기타':'ig','베이스':'ib','드럼':'id','피아노':'ik','키보드':'ik','바이올린':'icel','첼로':'icel','트럼펫':'istr','색소폰':'istr','음향':'iso','영상':'iso'};
+const ic=i=>ICLS[i]||'ix';
+let D={members:[],services:[]};
+let UI={tab:'home',wkStart:wkStart(new Date()),month:new Date(new Date().getFullYear(),new Date().getMonth(),1),expanded:null,homeNextOpen:false,verseOffset:0};
+let asgnBuf=[],selInst=[],autoSel={},monthOverrides={},editSvcId=null,availMonth=monthKey(new Date());
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+function pd(s){return new Date(s+'T00:00:00')}
+function fmt(d){const x=new Date(d);x.setHours(0,0,0,0);return x.toLocaleDateString('sv-SE')}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+function wkStart(d){const x=new Date(d),dy=x.getDay();x.setDate(x.getDate()+(dy===0?-6:1-dy));x.setHours(0,0,0,0);return x}
+function monthKey(d){return fmt(new Date(d.getFullYear(),d.getMonth(),1)).slice(0,7)}
+function fko(s){const d=pd(s);return `${d.getMonth()+1}월 ${d.getDate()}일`}
+function wd(s){return DAYS[pd(s).getDay()]}
+function wkLabel(ws){const we=addDays(ws,6),fd=new Date(ws.getFullYear(),ws.getMonth(),1),wn=Math.ceil((ws.getDate()+fd.getDay())/7);return{title:`${ws.getFullYear()}년 ${ws.getMonth()+1}월 ${wn}주차`,range:`${ws.getMonth()+1}월 ${ws.getDate()}일 - ${we.getMonth()+1}월 ${we.getDate()}일`}}
+function isThisWk(ws){return fmt(ws)===fmt(wkStart(new Date()))}
+const gm=id=>D.members.find(m=>String(m.id)===String(id)),gs=id=>D.services.find(s=>String(s.id)===String(id));
+function ini(n){return n?n.slice(0,1):'?'}
+function avc(n){let s=0;for(const c of n||'')s+=c.charCodeAt(0);return'av'+(s%8)}
+function wkSvcs(ws){const s=fmt(ws),e=fmt(addDays(ws,6));return D.services.filter(x=>x.date>=s&&x.date<=e).sort((a,b)=>a.date.localeCompare(b.date))}
+function normalizeMember(m){
+  const id=String(m.id||uid());
+  return{id, name:m.name||'', instruments:Array.isArray(m.instruments)?m.instruments:[], availableDays:Array.isArray(m.availableDays)?m.availableDays.map(Number):[], availability:m.availability&&typeof m.availability==='object'?m.availability:{}}
+}
+function normalizeService(s){
+  const id=String(s.id||uid());
+  const assignments=Array.isArray(s.assignments)?s.assignments.map(a=>({memberId:String(a.memberId),instrument:a.instrument||'미정'})):[];
+  return{id, date:s.date||fmt(new Date()), title:s.title||s.name||'예배', notes:s.notes||'', assignments}
+}
+function dataSize(x){return(x.members?.length||0)+(x.services?.length||0)}
+function parseStore(key){try{return JSON.parse(localStorage.getItem(key)||'{}')}catch(e){return{}}}
+function load(){
+  const candidates=[KEY,...OLD_KEYS].map(parseStore);
+  const r=candidates.sort((a,b)=>dataSize(b)-dataSize(a))[0]||{};
+  D.members=(r.members||[]).map(normalizeMember).filter(m=>m.name);
+  D.services=(r.services||[]).map(normalizeService);
+  save();
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(D));OLD_KEYS.forEach(k=>localStorage.setItem(k,JSON.stringify(D)))}
+function memberAvailableOn(m,dateStr){const ov=m.availability?.[dateStr];if(ov===true||ov===false)return ov;return !!(m.availableDays&&m.availableDays.includes(pd(dateStr).getDay()))}
+function avail(dateStr){return D.members.filter(m=>memberAvailableOn(m,dateStr))}
+const VERSES=[
+["여호수아 1:9","","내가 네게 명한 것이 아니냐 ? 마음을 강하게 하고 담대히 하라 ! 두려워 말며 놀라지 말라 ! 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라 ! 하시니라"],
+["시편 23:1","","(다윗의 시) 여호와는 나의 목자시니 내가 부족함이 없으리로다"],
+["시편 23:4","","내가 사망의 음침한 골짜기로 다닐지라도 해를 두려워하지 않을것은 주께서 나와 함께 하심이라 주의 지팡이와 막대기가 나를 안위하시나이다"],
+["시편 27:1","","(다윗의 시) 여호와는 나의 빛이요 나의 구원이시니 내가 누구를 두려워하리요 여호와는 내 생명의 능력이시니 내가 누구를 무서워하리요"],
+["시편 28:7","","여호와는 나의 힘과 나의 방패시니 내 마음이 저를 의지하여 도움을 얻었도다 그러므로 내 마음이 크게 기뻐하며 내 노래로 저를 찬송하리로다"],
+["시편 31:24","","강하고 담대하라 여호와를 바라는 너희들아 !"],
+["시편 34:18","","여호와는 마음이 상한 자에게 가까이 하시고 중심에 통회하는 자를 구원하시는도다"],
+["시편 37:5","","너의 길을 여호와께 맡기라 ! 저를 의지하면 저가 이루시고"],
+["시편 46:1","","(고라 자손의 시. 영장으로 알라못에 맞춘 노래) 하나님은 우리의 피난처시요 힘이시니 환난 중에 만날 큰 도움이시라"],
+["시편 55:22","","네 짐을 여호와께 맡겨 버리라 너를 붙드시고 의인의 요동함을 영영히 허락지 아니하시리로다"],
+["시편 73:26","","내 육체와 마음은 쇠잔하나 하나님은 내 마음의 반석이시요 영원한 분깃이시라"],
+["시편 84:5","","주께 힘을 얻고 그 마음에 시온의 대로가 있는 자는 복이 있나이다"],
+["시편 91:1","","지존자의 은밀한 곳에 거하는 자는 전능하신 자의 그늘 아래 거하리로다"],
+["시편 94:19","","내 속에 생각이 많을 때에 주의 위안이 내 영혼을 즐겁게 하시나이다"],
+["시편 100:5","","대저 여호와는 선하시니 그 인자하심이 영원하고 그 성실하심이 대대에 미치리로다"],
+["시편 118:24","",""],
+["시편 121:1-2","","(성전으로 올라가는 노래) 내가 산을 향하여 눈을 들리라 나의 도움이 어디서 올꼬 나의 도움이 천지를 지으신 여호와에게서로다"],
+["시편 139:10","","곧 거기서도 주의 손이 나를 인도하시며 주의 오른손이 나를 붙드시리이다"],
+["잠언 3:5-6","","너는 마음을 다하여 여호와를 의뢰하고 네 명철을 의지하지 말라 너는 범사에 그를 인정하라 ! 그리하면 네 길을 지도하시리라"],
+["잠언 16:3","","너의 행사를 여호와께 맡기라 그리하면 너의 경영하는 것이 이루리라"],
+["이사야 26:3","","주께서 심지가 견고한 자를 평강에 평강으로 지키시리니 이는 그가 주를 의뢰함이니이다"],
+["이사야 40:29","","피곤한 자에게는 능력을 주시며 무능한 자에게는 힘을 더하시나니"],
+["이사야 40:31","","오직 여호와를 앙망하는 자는 새 힘을 얻으리니 독수리의 날개치며 올라감 같을 것이요 달음박질하여도 곤비치 아니하겠고 걸어가도 피곤치 아니하리로다"],
+["이사야 41:10","","두려워 말라 내가 너와 함께 함이니라 놀라지 말라 나는 네 하나님이 됨이니라 내가 너를 굳세게 하리라 참으로 너를 도와 주리라 참으로 나의 의로운 오른손으로 너를 붙들리라"],
+["이사야 43:2","","네가 물 가운데로 지날 때에 내가 함께할 것이라 강을 건널 때에 물이 너를 침몰치 못할 것이며 네가 불 가운데로 행할 때에 타지도 아니할 것이요 불꽃이 너를 사르지도 못하리니"],
+["이사야 49:15-16","","여인이 어찌 그 젖먹는 자식을 잊겠으며 자기 태에서 난 아들을 긍휼히 여기지 않겠느냐 그들은 혹시 잊을지라도 나는 너를 잊지아니할 것이라 내가 너를 내 손바닥에 새겼고 너의 성벽이 항상 내 앞에 있나니"],
+["예레미야 29:11","","나 여호와가 말하노라 너희를 향한 나의 생각은 내가 아나니 재앙이 아니라 곧 평안이요 너희 장래에 소망을 주려 하는 생각이라"],
+["예레미야 33:3","","너는 내게 부르짖으라 ! 내가 네게 응답하겠고 네가 알지 못하는 크고 비밀한 일을 네게 보이리라"],
+["예레미야 애가 3:22-23","","여호와의 자비와 긍휼이 무궁하시므로 우리가 진멸되지 아니함이니이다 이것이 아침마다 새로우니 주의 성실이 크도소이다"],
+["미가 6:8","","사람아 주께서 선한 것이 무엇임을 네게 보이셨나니 여호와께서 네게 구하시는 것이 오직 공의를 행하며 인자를 사랑하며 겸손히 네 하나님과 함께 행하는 것이 아니냐"],
+["마태복음 5:14","","너희는 세상의 빛이라 ! 산 위에 있는 동네가 숨기우지 못할 것이요"],
+["마태복음 6:33","","너희는 먼저 그의 나라와 그의 의를 구하라 ! 그리하면 이 모든 것을 너희에게 더하시리라"],
+["마태복음 11:28","","수고하고 무거운 짐진 자들아 ! 다 내게로 오라 내가 너희를 쉬게 하리라"],
+["마태복음 28:20","","내가 너희에게 분부한 모든 것을 가르쳐 지키게 하라 볼지어다 ! 내가 세상 끝날까지 너희와 항상 함께 있으리라 ! 하시니라"],
+["마가복음 10:27","","예수께서 저희를 보시며 가라사대 `사람으로는 할 수 없으되 하나님으로는 그렇지 아니하니 하나님으로서는 다 하실 수 있느니라 !\u0027"],
+["누가복음 1:37","","대저 하나님의 모든 말씀은 능치 못하심이 없느니라 !\u0027"],
+["누가복음 12:32","","적은 무리여 무서워 말라 너희 아버지께서 그 나라를 너희에게 주시기를 기뻐하시느니라"],
+["요한복음 1:5","","빛이 어두움에 비취되 어두움이 깨닫지 못하더라"],
+["요한복음 3:16","","하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 저를 믿는 자마다 멸망치 않고 영생을 얻게 하려 하심이니라"],
+["요한복음 8:12","","예수께서 또 일러 가라사대 `나는 세상의 빛이니 나를 따르는 자는 어두움에 다니지 아니하고 생명의 빛을 얻으리라\u0027"],
+["요한복음 10:10","","도적이 오는 것은 도적질하고 죽이고 멸망시키려는 것뿐이요 내가 온 것은 양으로 생명을 얻게 하고 더 풍성히 얻게 하려는 것이라"],
+["요한복음 14:1","","너희는 마음에 근심하지 말라 하나님을 믿으니 또 나를 믿으라"],
+["요한복음 14:27","","평안을 너희에게 끼치노니 곧 나의 평안을 너희에게 주노라 내가 너희에게 주는 것은 세상이 주는 것 같지 아니하니라 너희는 마음에 근심도 말고 두려워하지도 말라"],
+["요한복음 15:5","","나는 포도나무요 너희는 가지니 저가 내 안에 내가 저 안에 있으면 이 사람은 과실을 많이 맺나니 나를 떠나서는 너희가 아무 것도 할 수 없음이라"],
+["요한복음 16:33","","이것을 너희에게 이름은 너희로 내 안에서 평안을 누리게 하려 함이라 세상에서는 너희가 환난을 당하나 담대하라 ! 내가 세상을 이기었노라 !\u0027 하시니라"],
+["사도행전 1:8","","오직 성령이 너희에게 임하시면 너희가 권능을 받고 예루살렘과 온 유대와 사마리아 땅 끝까지 이르러 내 증인이 되리라\u0027 하시니라"],
+["로마서 5:3-5","","다만 이뿐 아니라 우리가 환난중에도 즐거워하나니 이는 환난은 인내를 인내는 연단을 연단은 소망을 이루는 줄 앎이로다 소망이 부끄럽게 아니함은 우리에게 주신 성령으로 말미암아 하나님의 사랑이 우리 마음에 부은바 됨이니"],
+["로마서 8:1","","그러므로 이제 그리스도 예수 안에 있는 자에게는 결코 정죄함이 없나니"],
+["로마서 8:28","","우리가 알거니와 하나님을 사랑하는 자 곧 그 뜻대로 부르심을 입은 자들에게는 모든 것이 합력하여 선을 이루느니라"],
+["로마서 8:31","","그런즉 이 일에 대하여 우리가 무슨 말 하리요 만일 하나님이 우리를 위하시면 누가 우리를 대적하리요"],
+["로마서 8:38-39","","내가 확신하노니 사망이나 생명이나 천사들이나 권세자들이나 현재 일이나 장래 일이나 능력이나 높음이나 깊음이나 다른 아무 피조물이라도 우리를 우리 주 그리스도 예수 안에 있는 하나님의 사랑에서 끊을 수 없으리라"],
+["로마서 12:12","","소망 중에 즐거워하며 환난 중에 참으며 기도에 항상 힘쓰며"],
+["로마서 15:13","","소망의 하나님이 모든 기쁨과 평강을 믿음 안에서 너희에게 충만케 하사 성령의 능력으로 소망이 넘치게 하시기를 원하노라"],
+["고린도전서 10:13","","사람이 감당할 시험 밖에는 너희에게 당한 것이 없나니 오직 하나님은 미쁘사 너희가 감당치 못할 시험 당함을 허락지 아니하시고 시험 당할 즈음에 또한 피할 길을 내사 너희로 능히 감당하게 하시느니라"],
+["고린도전서 13:13","","그런즉 믿음, 소망, 사랑, 이 세가지는 항상 있을 것인데 그 중에 제일은 사랑이라 !"],
+["고린도전서 15:58","","그러므로 내 사랑하는 형제들아 견고하며 흔들리지 말며 항상 주의 일에 더욱 힘쓰는 자들이 되라 이는 너희 수고가 주 안에서 헛되지 않은 줄을 앎이니라"],
+["고린도후서 4:16","","그러므로 우리가 낙심하지 아니하노니 겉 사람은 후패하나 우리의 속은 날로 새롭도다"],
+["고린도후서 5:17","","그런즉 누구든지 그리스도 안에 있으면 새로운 피조물이라 이전 것은 지나갔으니 보라! 새것이 되었도다"],
+["고린도후서 12:9","","내게 이르시기를 내 은혜가 네게 족하도다 ! 이는 내 능력이 약한데서 온전하여짐이라 하신지라 이러므로 도리어 크게 기뻐함으로나의 여러 약한 것들에 대하여 자랑하리니 이는 그리스도의 능력으로 내게 머물게 하려 함이라"],
+["갈라디아서 2:20","","내가 그리스도와 함께 십자가에 못 박혔나니 그런즉 이제는 내가 산 것이 아니요 오직 내 안에 그리스도께서 사신 것이라 이제 내가 육체 가운데 사는 것은 나를 사랑하사 나를 위하여 자기 몸을 버리신 하나님의 아들을 믿는 믿음 안에서 사는 것이라"],
+["갈라디아서 5:22-23","","오직 성령의 열매는 사랑과, 희락과, 화평과, 오래 참음과, 자비와, 양선과, 충성과, 온유와, 절제니 이같은 것을 금지할 법이 없느니라"],
+["갈라디아서 6:9","","우리가 선을 행하되 낙심하지 말지니 피곤하지 아니하면 때가 이르매 거두리라"],
+["에베소서 2:10","","우리는 그의 만드신 바라 그리스도 예수 안에서 선한 일을 위하여 지으심을 받은 자니 이 일은 하나님이 전에 예비하사 우리로 그 가운데서 행하게 하려 하심이니라"],
+["에베소서 3:20","","우리 가운데서 역사하시는 능력대로 우리의 온갖 구하는 것이나 생각하는 것에 더 넘치도록 능히 하실 이에게"],
+["에베소서 4:32","","서로 인자하게 하며 불쌍히 여기며 서로 용서하기를 하나님이 그리스도 안에서 너희를 용서하심과 같이 하라"],
+["에베소서 6:10","","종말로 너희가 주 안에서와 그 힘의 능력으로 강건하여지고"],
+["빌립보서 1:6","","너희 속에 착한 일을 시작하신 이가 그리스도 예수의 날까지 이루실 줄을 우리가 확신하노라"],
+["빌립보서 2:13","","너희 안에서 행하시는 이는 하나님이시니 자기의 기쁘신 뜻을 위하여 너희로 소원을 두고 행하게 하시나니"],
+["빌립보서 3:14","","푯대를 향하여 그리스도 예수 안에서 하나님이 위에서 부르신 부름의 상을 위하여 좇아가노라"],
+["빌립보서 4:4","","주 안에서 항상 기뻐하라 ! 내가 다시 말하노니 기뻐하라 !"],
+["빌립보서 4:6-7","","아무 것도 염려하지 말고 오직 모든 일에 기도와 간구로 너희 구할 것을 감사함으로 하나님께 아뢰라 그리하면 모든 지각에 뛰어난 하나님의 평강이 그리스도 예수 안에서 너희 마음과 생각을 지키시리라"],
+["빌립보서 4:8","","종말로 형제들아 무엇에든지 참되며, 무엇에든지 경건하며, 무엇에든지 옳으며, 무엇에든지 정결하며, 무엇에든지 사랑할 만하며, 무엇에든지 칭찬할 만하며, 무슨 덕이 있든지, 무슨 기림이 있든지, 이것들을 생각하라 !"],
+["빌립보서 4:13","","내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라 !"],
+["빌립보서 4:19","","나의 하나님이 그리스도 예수 안에서 영광 가운데 그 풍성한 대로 너희 모든 쓸 것을 채우시리라"],
+["골로새서 3:15","","그리스도의 평강이 너희 마음을 주장하게 하라 평강을 위하여 너희가 한 몸으로 부르심을 받았나니 또한 너희는 감사하는 자가 되라"],
+["골로새서 3:23","","무슨 일을 하든지 마음을 다하여 주께 하듯 하고 사람에게 하듯 하지 말라"],
+["데살로니가전서 5:11","","그러므로 피차 권면하고 피차 덕을 세우기를 너희가 하는 것같이 하라"],
+["데살로니가전서 5:16-18","","항상 기뻐하라 ! 쉬지 말고 기도하라 ! 범사에 감사하라 ! 이는 그리스도 예수 안에서 너희를 향하신 하나님의 뜻이니라"],
+["데살로니가후서 3:3","","주는 미쁘사 너희를 굳게 하시고 악한 자에게서 지키시리라"],
+["디모데후서 1:7","","하나님이 우리에게 주신 것은 두려워하는 마음이 아니요 오직 능력과 사랑과 근신하는 마음이니"],
+["디모데후서 3:16","","모든 성경은 하나님의 감동으로 된 것으로 교훈과 책망과 바르게 함과 의로 교육하기에 유익하니"],
+["히브리서 4:16","","그러므로 우리가 긍휼하심을 받고 때를 따라 돕는 은혜를 얻기 위하여 은혜의 보좌 앞에 담대히 나아갈 것이니라"],
+["히브리서 10:23","","또 약속하신 이는 미쁘시니 우리가 믿는 도리의 소망을 움직이지 않고 굳게 잡아"],
+["히브리서 11:1","","믿음은 바라는 것들의 실상이요 보지 못하는 것들의 증거니"],
+["히브리서 12:1-2","","이러므로 우리에게 구름같이 둘러싼 허다한 증인들이 있으니 모든 무거운 것과 얽매이기 쉬운 죄를 벗어 버리고 인내로써 우리 앞에 당한 경주를 경주하며 믿음의 주요 또 온전케 하시는 이인 예수를 바라보자 저는 그 앞에 있는 즐거움을 위하여 십자가를 참으사 부끄러움을 개의치 아니하시더니 하나님 보좌 우편에 앉으셨느니라"],
+["야고보서 1:5","","너희 중에 누구든지 지혜가 부족하거든 모든 사람에게 후히 주시고 꾸짖지 아니하시는 하나님께 구하라 그리하면 주시리라"],
+["야고보서 1:17","","각양 좋은 은사와 온전한 선물이 다 위로부터 빛들의 아버지께로서 내려오나니 그는 변함도 없으시고 회전하는 그림자도 없으시니라"],
+["베드로전서 1:3","","찬송하리로다 우리 주 예수 그리스도의 아버지 하나님이 그 많으신 긍휼대로 예수 그리스도의 죽은 자 가운데서 부활하심으로 말미암아 우리를 거듭나게 하사 산 소망이 있게 하시며"],
+["베드로전서 4:7","","만물의 마지막이 가까왔으니 그러므로 너희는 정신을 차리고 근신하여 기도하라"],
+["베드로후서 3:18","","오직 우리 주 곧 구주 예수 그리스도의 은혜와 저를 아는 지식에서 자라가라 영광이 이제와 영원한 날까지 저에게 있을지어다"],
+["요한1서 1:9","","만일 우리가 우리 죄를 자백하면 저는 미쁘시고 의로우사 우리 죄를 사하시며 모든 불의에서 우리를 깨끗케 하실 것이요"],
+["요한1서 3:18","","자녀들아 ! 우리가 말과 혀로만 사랑하지 말고 오직 행함과 진실함으로 하자"],
+["요한1서 4:7","","사랑하는 자들아 ! 우리가 서로 사랑하자 사랑은 하나님께 속한 것이니 사랑하는 자마다 하나님께로 나서 하나님을 알고"],
+["요한1서 4:18","","사랑 안에 두려움이 없고 온전한 사랑이 두려움을 내어 쫓나니 두려움에는 형벌이 있음이라 두려워하는 자는 사랑 안에서 온전히 이루지 못하였느니라"],
+["요한1서 5:14","","그를 향하여 우리의 가진 바 담대한 것이 이것이니 그의 뜻대로 무엇을 구하면 들으심이라"],
+["유다서 1:24","","능히 너희를 보호하사 거침이 없게 하시고 너희로 그 영광 앞에 흠이 없이 즐거움으로 서게 하실 자"],
+["요한계시록 3:20","","볼지어다 내가 문 밖에 서서 두드리노니 누구든지 내 음성을 듣고 문을 열면 내가 그에게로 들어가 그로 더불어 먹고 그는 나로 더불어 먹으리라"],
+["요한계시록 21:4","","모든 눈물을 그 눈에서 씻기시매 다시 사망이 없고 애통하는 것이나 곡하는 것이나 아픈 것이 다시 있지 아니하리니 처음 것들이 다 지나갔음이러라\u0027"],
+["출애굽기 14:14","","여호와께서 너희를 위하여 싸우시리니 너희는 가만히 있을지니라 !\u0027"],
+["민수기 6:24-26","","여호와는 네게 복을 주시고 너를 지키시기를 원하며 여호와는 그 얼굴로 네게 비취사 은혜 베푸시기를 원하며 여호와는 그 얼굴을 네게로 향하여 드사 평강주시기를 원하노라 할지니라 하라"]
+];
+function verseIndex(dateStr=fmt(new Date()),offset=0){const n=Math.floor(pd(dateStr).getTime()/86400000)+offset;return((n%VERSES.length)+VERSES.length)%VERSES.length}
+function dailyVerse(dateStr=fmt(new Date()),offset=0){const idx=verseIndex(dateStr,offset),v=VERSES[idx];return{idx,ref:v[0],msg:v[1],text:v[2]||''}}
+
+function render(){document.querySelectorAll('.tab-item').forEach(b=>b.classList.toggle('on',b.dataset.tab===UI.tab));document.getElementById('main').innerHTML=UI.tab==='home'?rHome():UI.tab==='schedule'?rSched():UI.tab==='month'?rMonth():UI.tab==='members'?rMembers():rStats();bindEvents()}
+function rHome(){
+  const today=fmt(new Date()),next=D.services.filter(s=>s.date>=today).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  const verse=dailyVerse(today,UI.verseOffset);
+  let h=`<div class="homehero"><div class="homeeyebrow">${fko(today)} ${wd(today)}요일</div><div class="hometitle">오늘의 찬양팀 스케줄</div><div class="homesub">${next?`다음 예배는 ${fko(next.date)} ${next.title}입니다.`:'등록된 다음 예배가 없습니다. 새 일정을 추가해보세요.'}</div></div>`;
+  h+=`<div class="quickgrid"><button class="quickbtn" id="homeAddSvc"><div class="quickicon" style="background:#dbeafe;color:#1d4ed8">+</div><div class="quicktitle">예배 추가</div><div class="quicksub">날짜와 배정 팀원을 바로 입력</div></button><button class="quickbtn" id="homeAddMbr"><div class="quickicon" style="background:#fce7f3;color:#be185d">+</div><div class="quicktitle">팀원 추가</div><div class="quicksub">악기와 가능 날짜 등록</div></button></div>`;
+  h+=`<div class="versecard"><div class="versetop"><div class="verseref">오늘의 말씀 ${verse.idx+1}/100</div><div class="versecontrols"><button class="versebtn" id="versePrev" aria-label="이전 말씀">‹</button><button class="versebtn" id="verseNext" aria-label="다음 말씀">›</button></div></div><div class="verselabel">말씀 구절</div><div class="versequote">${verse.ref}</div>${verse.text?`<div class="verselabel">본문</div><div class="versetext">${verse.text}</div>`:''}${verse.msg?`<div class="verselabel">묵상</div><div class="versemsg">${verse.msg}</div>`:''}</div>`;
+  if(next){
+    const assigned=next.assignments.length?next.assignments.map(a=>{const m=gm(a.memberId);return m?`<div class="ar"><div class="av sm ${avc(m.name)}">${ini(m.name)}</div><span class="arname">${m.name}</span><span class="chip ${ic(a.instrument)}">${a.instrument}</span></div>`:''}).join(''):'<div style="color:var(--muted);padding:8px 0">배정된 팀원이 없습니다.</div>';
+    h+=`<div class="sec-label">다음 예배</div><div class="section home-next" id="homeNext"><div class="row"><div class="svc-date"><div class="svc-daynum">${pd(next.date).getDate()}</div><div class="svc-dayname">${wd(next.date)}</div></div><div style="flex:1"><div style="font-weight:900">${next.title}</div><div style="font-size:13px;color:var(--muted)">${fko(next.date)} · ${next.assignments.length}명 배정</div></div><button class="btn btn-tint btn-sm" data-edit-svc="${next.id}">편집</button></div>${UI.homeNextOpen?`<div class="home-detail">${next.notes?`<div class="note">${next.notes}</div>`:''}${assigned}<button class="btn btn-gray btn-sm" id="homeGoSchedule" style="margin-top:8px">일정에서 보기</button></div>`:''}</div>`;
+  }
+  return h;
+}
+function rSched(){const lb=wkLabel(UI.wkStart),svcs=wkSvcs(UI.wkStart),today=fmt(new Date()),grps={};svcs.forEach(s=>(grps[s.date]=grps[s.date]||[]).push(s));const dates=Object.keys(grps).sort();let h=`<div class="wknav"><button class="wkarr" id="prev">‹</button><div class="wkinfo"><div class="wktitle">${lb.title}</div><div class="wkrange">${lb.range}</div>${!isThisWk(UI.wkStart)?'<button class="wktoday" id="goToday">오늘</button>':''}</div><button class="wkarr" id="next">›</button></div>`;if(!dates.length)h+=`<div class="empty"><div class="emptyicon">+</div><div class="emptytitle">이번 주 일정 없음</div><div class="emptysub">아래 버튼으로 예배 일정을 추가해보세요.</div><button class="btn btn-fill" id="addSvcEmpty" style="max-width:220px;margin:0 auto">예배 추가</button></div>`;else dates.forEach(date=>{h+=`<div class="daylbl">${fko(date)} (${wd(date)})${date===today?' · 오늘':''}</div>`;grps[date].forEach(s=>h+=rCard(s))});return h+`<button class="fab" id="addSvcFab">+</button>`}
+function rMonth(){
+  const y=UI.month.getFullYear(),m=UI.month.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0),today=fmt(new Date());
+  const mkey=monthKey(UI.month),svcs=D.services.filter(s=>s.date.startsWith(mkey)).sort((a,b)=>a.date.localeCompare(b.date)),byDate={};
+  svcs.forEach(s=>(byDate[s.date]=byDate[s.date]||[]).push(s));
+  let h=`<div class="wknav"><button class="wkarr" id="monthPrev">‹</button><div class="wkinfo"><div class="wktitle">${y}년 ${m+1}월</div><div class="wkrange">${svcs.length}개 예배 일정</div>${mkey!==monthKey(new Date())?'<button class="wktoday" id="monthToday">이번 달</button>':''}</div><button class="wkarr" id="monthNext">›</button></div>`;
+  h+=`<div class="monthcal">${DAYS.map(d=>`<div class="calhead">${d}</div>`).join('')}`;
+  for(let i=0;i<first.getDay();i++)h+='<div class="calday blank"></div>';
+  for(let day=1;day<=last.getDate();day++){
+    const date=fmt(new Date(y,m,day)),items=byDate[date]||[];
+    h+=`<div class="calday${date===today?' today':''}"><div class="calnum">${day}</div>${items.slice(0,3).map(s=>`<button class="calitem" data-edit-svc="${s.id}">${s.title}</button>`).join('')}${items.length>3?`<div class="calmore">+${items.length-3}개 더</div>`:''}</div>`;
+  }
+  h+=`</div>`;
+  if(svcs.length){h+=`<div class="sec-label">이달의 일정</div><div class="section">`;svcs.forEach(s=>h+=`<div class="row"><div class="svc-date"><div class="svc-daynum">${pd(s.date).getDate()}</div><div class="svc-dayname">${wd(s.date)}</div></div><div style="flex:1"><div style="font-weight:900">${s.title}</div><div style="font-size:13px;color:var(--muted)">${fko(s.date)} · ${s.assignments.length}명 배정</div></div><button class="btn btn-tint btn-sm" data-edit-svc="${s.id}">편집</button></div>`);h+=`</div>`}
+  else h+=`<div class="empty"><div class="emptyicon">+</div><div class="emptytitle">이번 달 일정 없음</div><div class="emptysub">+ 버튼으로 월간 예배 일정을 추가해보세요.</div><button class="btn btn-fill" id="addSvcEmpty" style="max-width:220px;margin:0 auto">예배 추가</button></div>`;
+  return h+`<button class="fab" id="addSvcFab">+</button>`;
+}
+function rCard(s){const open=UI.expanded===s.id;const arHtml=s.assignments.length?s.assignments.map(a=>{const m=gm(a.memberId);return m?`<div class="ar"><div class="av ${avc(m.name)}">${ini(m.name)}</div><span class="arname">${m.name}</span><span class="chip ${ic(a.instrument)}">${a.instrument}</span></div>`:''}).join(''):'<div style="padding:10px 0;color:var(--muted)">배정 없음</div>';return `<div class="svc${open?' open':''}"><div class="svc-head" data-tog="${s.id}"><div class="svc-date"><div class="svc-daynum">${pd(s.date).getDate()}</div><div class="svc-dayname">${wd(s.date)}</div></div><div class="svc-mid"><div class="svc-title">${s.title}</div><div class="svc-sub">${s.assignments.length}명 배정</div></div><button class="btn btn-tint btn-sm" data-edit-svc="${s.id}">편집</button><span class="chevron">›</span></div><div class="svc-body">${s.notes?`<div class="note">${s.notes}</div>`:''}${arHtml}<div class="actrow"><button class="btn btn-gray btn-sm" data-copy-svc="${s.id}">다음 주 복사</button><button class="btn btn-red btn-sm" style="margin-left:auto" data-del-svc="${s.id}">삭제</button></div></div></div>`}
+function rMembers(){let h=`<div class="srchbox"><span style="color:var(--muted)">검색</span><input id="mbr-search" placeholder="팀원 이름 검색"></div>`;if(!D.members.length)h+=`<div class="empty"><div class="emptyicon">+</div><div class="emptytitle">등록된 팀원 없음</div><div class="emptysub">+ 버튼으로 찬양팀 팀원을 추가하세요.</div></div>`;else{h+=`<div class="section">`;D.members.forEach(m=>{const chips=m.instruments.map(ins=>`<span class="chip ${ic(ins)}">${ins}</span>`).join('');const dayStr=m.availableDays?.length?m.availableDays.map(d=>DAYS[d]).join('·')+'요일':'<span style="color:#94a3b8">요일 미설정</span>';const overrides=Object.values(m.availability||{}).length;h+=`<div class="mrow" data-edit-mbr="${m.id}"><div class="av lg ${avc(m.name)}">${ini(m.name)}</div><div style="flex:1;min-width:0"><div class="mrname">${m.name}</div><div class="chiprow">${chips||'<span style="font-size:12px;color:#94a3b8">악기 없음</span>'}</div><div class="mrdays">정기 참여: ${dayStr}</div><div class="mroverride">월간 예외 날짜 ${overrides}개</div></div><button class="btn btn-tint btn-sm" type="button">편집</button></div>`});h+=`</div>`}return h+`<button class="fab" id="addMbrFab">+</button>`}
+function rStats(){const today=fmt(new Date()),in30=fmt(addDays(new Date(),30)),cm={},ci2={};D.services.forEach(s=>s.assignments.forEach(a=>{cm[a.memberId]=(cm[a.memberId]||0)+1;ci2[a.instrument]=(ci2[a.instrument]||0)+1}));const mrank=Object.entries(cm).map(([id,c])=>({m:gm(id),c})).filter(x=>x.m).sort((a,b)=>b.c-a.c).slice(0,8);const irank=Object.entries(ci2).sort((a,b)=>b[1]-a[1]),tot=Object.values(ci2).reduce((a,b)=>a+b,0);const upcoming=D.services.filter(s=>s.date>=today&&s.date<=in30).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);let h=`<div class="statrow"><div class="statcard"><div class="statnum">${D.members.length}</div><div class="statlbl">전체 팀원</div></div><div class="statcard"><div class="statnum">${D.services.length}</div><div class="statlbl">전체 예배</div></div></div>`;if(upcoming.length){h+=`<div class="sec-label">다가오는 일정</div><div class="section">`;upcoming.forEach(s=>h+=`<div class="row"><div style="text-align:center;min-width:44px"><div style="font-size:24px;font-weight:900;color:var(--tint)">${pd(s.date).getDate()}</div><div style="font-size:11px;color:var(--muted)">${wd(s.date)}</div></div><div style="flex:1"><div style="font-weight:850">${s.title}</div><div style="font-size:13px;color:var(--muted)">${fko(s.date)} · ${s.assignments.length}명</div></div></div>`);h+=`</div>`}if(mrank.length){h+=`<div class="sec-label">참여 순위</div><div class="section">`;mrank.forEach((x,i)=>h+=`<div class="rankrow"><div class="rankn">${i+1}</div><div class="av sm ${avc(x.m.name)}">${ini(x.m.name)}</div><div style="font-weight:800">${x.m.name}</div><div class="rankcnt">${x.c}회</div></div>`);h+=`</div>`}if(irank.length){h+=`<div class="sec-label">악기별 현황</div><div class="section" style="padding:14px 16px">`;irank.forEach(([ins,cnt])=>{const pct=tot?Math.round(cnt/tot*100):0;h+=`<div class="barrow"><div class="barhdr"><span class="chip ${ic(ins)}">${ins}</span><span style="font-size:13px;color:var(--muted)">${cnt}회 (${pct}%)</span></div><div class="barbg"><div class="barfill" style="width:${pct}%"></div></div></div>`});h+=`</div>`}if(!D.members.length&&!D.services.length)h+=`<div class="empty"><div class="emptyicon">i</div><div class="emptytitle">데이터 없음</div><div class="emptysub">팀원과 예배를 추가하면 통계가 표시됩니다.</div></div>`;return h}
+
+function bindEvents(){const $=id=>document.getElementById(id);document.querySelectorAll('.tab-item').forEach(b=>b.onclick=()=>{UI.tab=b.dataset.tab;render()});$('versePrev')&&($('versePrev').onclick=()=>{UI.verseOffset--;render()});$('verseNext')&&($('verseNext').onclick=()=>{UI.verseOffset++;render()});$('homeAddSvc')&&($('homeAddSvc').onclick=()=>openSvc(null));$('homeAddMbr')&&($('homeAddMbr').onclick=()=>openMbr(null));$('homeNext')&&($('homeNext').onclick=e=>{if(e.target.closest('[data-edit-svc],#homeGoSchedule'))return;UI.homeNextOpen=!UI.homeNextOpen;render()});$('homeGoSchedule')&&($('homeGoSchedule').onclick=e=>{e.stopPropagation();const next=D.services.filter(s=>s.date>=fmt(new Date())).sort((a,b)=>a.date.localeCompare(b.date))[0];if(next){UI.tab='schedule';UI.wkStart=wkStart(pd(next.date));UI.expanded=next.id;render()}});$('monthPrev')&&($('monthPrev').onclick=()=>{UI.month=new Date(UI.month.getFullYear(),UI.month.getMonth()-1,1);render()});$('monthNext')&&($('monthNext').onclick=()=>{UI.month=new Date(UI.month.getFullYear(),UI.month.getMonth()+1,1);render()});$('monthToday')&&($('monthToday').onclick=()=>{UI.month=new Date(new Date().getFullYear(),new Date().getMonth(),1);render()});$('prev')&&($('prev').onclick=()=>{UI.wkStart=addDays(UI.wkStart,-7);render()});$('next')&&($('next').onclick=()=>{UI.wkStart=addDays(UI.wkStart,7);render()});$('goToday')&&($('goToday').onclick=()=>{UI.wkStart=wkStart(new Date());render()});$('addSvcFab')&&($('addSvcFab').onclick=()=>openSvc(null));$('addSvcEmpty')&&($('addSvcEmpty').onclick=()=>openSvc(null));$('addMbrFab')&&($('addMbrFab').onclick=()=>openMbr(null));document.querySelectorAll('[data-tog]').forEach(el=>el.onclick=e=>{if(e.target.closest('[data-edit-svc],[data-del-svc],[data-copy-svc]'))return;UI.expanded=UI.expanded===el.dataset.tog?null:el.dataset.tog;render()});document.querySelectorAll('[data-edit-svc]').forEach(b=>b.onclick=e=>{e.stopPropagation();openSvc(b.dataset.editSvc)});document.querySelectorAll('[data-del-svc]').forEach(b=>b.onclick=e=>{e.stopPropagation();confirm2('예배 삭제','이 예배 일정을 삭제하시겠습니까?',()=>{D.services=D.services.filter(s=>String(s.id)!==String(b.dataset.delSvc));save();render()})});document.querySelectorAll('[data-copy-svc]').forEach(b=>b.onclick=e=>{e.stopPropagation();const s=gs(b.dataset.copySvc);if(!s)return;const c={...s,id:uid(),date:fmt(addDays(pd(s.date),7)),assignments:(s.assignments||[]).map(a=>({...a}))};D.services.push(c);save();UI.wkStart=wkStart(pd(c.date));UI.month=new Date(pd(c.date).getFullYear(),pd(c.date).getMonth(),1);UI.expanded=c.id;render()});document.querySelectorAll('[data-edit-mbr]').forEach(el=>el.onclick=()=>openMbr(el.dataset.editMbr));const srch=$('mbr-search');if(srch)srch.oninput=()=>{const q=srch.value.toLowerCase();document.querySelectorAll('[data-edit-mbr]').forEach(el=>{const n=el.querySelector('.mrname')?.textContent.toLowerCase()||'';el.style.display=n.includes(q)?'':'none'})}}
+
+function deleteSvc(id){D.services=D.services.filter(s=>String(s.id)!==String(id));if(String(UI.expanded)===String(id))UI.expanded=null;save();render()}
+function openSvc(id){editSvcId=id;asgnBuf=[];autoSel={};document.getElementById('svc-title-hdr').textContent=id?'예배 편집':'예배 추가';const s=id?gs(id):null;if(s){document.getElementById('svc-date').value=s.date;document.getElementById('svc-name').value=s.title;document.getElementById('svc-note').value=s.notes||'';asgnBuf=s.assignments.map(a=>({...a}))}else{const base=UI.tab==='month'?new Date(UI.month.getFullYear(),UI.month.getMonth(),Math.min(new Date().getDate(),new Date(UI.month.getFullYear(),UI.month.getMonth()+1,0).getDate())):addDays(UI.wkStart,6);document.getElementById('svc-date').value=fmt(base);document.getElementById('svc-name').value='주일 1부 예배';document.getElementById('svc-note').value=''}const name=document.getElementById('svc-name');document.querySelectorAll('#svc-presets .pchip').forEach(b=>{b.classList.toggle('on',b.dataset.v===name.value);b.onclick=()=>{name.value=b.dataset.v;document.querySelectorAll('#svc-presets .pchip').forEach(x=>x.classList.remove('on'));b.classList.add('on')}});document.getElementById('svc-date').oninput=()=>refreshAuto();document.getElementById('mbr-sel').onchange=()=>{const mid=document.getElementById('mbr-sel').value;if(!mid)return;const m=gm(mid);if(!m||!m.instruments.length){document.getElementById('mbr-sel').value='';return}if(m.instruments.length===1){addAsgn(mid,m.instruments[0]);document.getElementById('mbr-sel').value='';document.getElementById('inst-quick').style.display='none'}else showInstQuick(m)};const del=document.getElementById('svc-del');if(id){del.style.display='';del.onclick=()=>{closeOv('svc-ov');confirm2('예배 삭제','이 예배 일정을 삭제하시겠습니까?',()=>deleteSvc(id))}}else{del.style.display='none';del.onclick=null}document.getElementById('svc-save').onclick=saveSvc;populateMsel();renderAsgnBuf();refreshAuto();showOv('svc-ov')}
+function refreshAuto(){const date=document.getElementById('svc-date').value,sub=document.getElementById('auto-sub'),list=document.getElementById('auto-list'),ftr=document.getElementById('auto-ftr'),allBtn=document.getElementById('auto-all');if(!date){sub.textContent='날짜를 선택하면 가능한 팀원이 표시됩니다';list.innerHTML='';ftr.style.display='none';allBtn.style.display='none';return}const members=avail(date),dayName=DAYS[pd(date).getDay()];if(!members.length){sub.textContent=`${dayName}요일 가능 팀원 없음`;list.innerHTML='';ftr.style.display='none';allBtn.style.display='none';return}sub.textContent=`${dayName}요일 · ${members.length}명 참여 가능`;allBtn.style.display='';members.forEach(m=>{if(autoSel[m.id]===undefined)autoSel[m.id]=true});list.innerHTML=members.map(m=>{const checked=autoSel[m.id]!==false,inst=m.instruments[0]||'미정',already=asgnBuf.find(a=>a.memberId===m.id);return`<div class="automrow" data-amid="${m.id}"><div class="autocheck${checked?' on':''}">${checked?'✓':''}</div><div class="av sm ${avc(m.name)}">${ini(m.name)}</div><span class="autoname">${m.name}${already?' <span style="font-size:11px;color:var(--muted)">(배정됨)</span>':''}</span><span class="chip ${ic(inst)}">${inst}</span></div>`}).join('');list.querySelectorAll('[data-amid]').forEach(row=>row.onclick=()=>{autoSel[row.dataset.amid]=!autoSel[row.dataset.amid];refreshAuto()});ftr.style.display='';allBtn.onclick=()=>{members.forEach(m=>autoSel[m.id]=true);addAutoSelected(members)};document.getElementById('auto-sel').onclick=()=>addAutoSelected(members)}
+function addAutoSelected(members){members.forEach(m=>{if(!autoSel[m.id]||asgnBuf.find(a=>a.memberId===m.id))return;asgnBuf.push({memberId:m.id,instrument:m.instruments[0]||'미정'})});renderAsgnBuf();populateMsel();refreshAuto()}
+function showInstQuick(member){const panel=document.getElementById('inst-quick');panel.style.display='';panel.innerHTML=`<span class="iqlbl">${member.name} 악기를 선택하세요</span>`;member.instruments.forEach(inst=>{const b=document.createElement('button');b.className='iqbtn';b.textContent=inst;b.onclick=()=>{addAsgn(member.id,inst);document.getElementById('mbr-sel').value='';panel.style.display='none'};panel.appendChild(b)})}
+function addAsgn(mid,inst){const ex=asgnBuf.find(a=>a.memberId===mid);if(ex)ex.instrument=inst;else asgnBuf.push({memberId:mid,instrument:inst});renderAsgnBuf();populateMsel();refreshAuto()}
+function populateMsel(){const sel=document.getElementById('mbr-sel'),assigned=new Set(asgnBuf.map(a=>a.memberId));sel.innerHTML='<option value="">+ 팀원 직접 추가...</option>';D.members.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=assigned.has(m.id)?`${m.name} (배정됨)`:m.name;sel.appendChild(o)})}
+function renderAsgnBuf(){const list=document.getElementById('asgn-list');document.getElementById('asgn-cnt').textContent=`${asgnBuf.length}명`;if(!asgnBuf.length){list.innerHTML='<div class="noasgn">배정된 팀원이 없습니다</div>';return}list.innerHTML=asgnBuf.map((a,i)=>{const m=gm(a.memberId);return m?`<div class="aeditrow"><div class="av sm ${avc(m.name)}">${ini(m.name)}</div><span style="flex:1;font-weight:850">${m.name}</span><span class="chip ${ic(a.instrument)}">${a.instrument}</span><button class="rmbtn" data-ri="${i}">x</button></div>`:''}).join('');list.querySelectorAll('[data-ri]').forEach(b=>b.onclick=()=>{asgnBuf.splice(+b.dataset.ri,1);renderAsgnBuf();populateMsel();refreshAuto()})}
+function saveSvc(){const date=document.getElementById('svc-date').value,title=document.getElementById('svc-name').value.trim(),notes=document.getElementById('svc-note').value.trim();if(!date||!title){alert('날짜와 예배명을 입력해주세요.');return}const payload={date,title,notes,assignments:asgnBuf.map(a=>({...a}))};if(editSvcId){const s=gs(editSvcId);if(!s){alert('수정할 일정을 찾을 수 없습니다.');return}Object.assign(s,payload)}else D.services.push({id:uid(),...payload});save();closeOv('svc-ov');UI.wkStart=wkStart(pd(date));UI.month=new Date(pd(date).getFullYear(),pd(date).getMonth(),1);UI.expanded=editSvcId||D.services[D.services.length-1].id;render()}
+
+function openMbr(id){selInst=[];monthOverrides={};document.getElementById('mbr-title-hdr').textContent=id?'팀원 편집':'팀원 추가';let curDays=[];const m=id?gm(id):null;if(m){document.getElementById('mbr-name').value=m.name;selInst=[...m.instruments];curDays=[...(m.availableDays||[])];monthOverrides={...(m.availability||{})}}else{document.getElementById('mbr-name').value='';availMonth=monthKey(new Date())}renderInstGrid();renderDayPick(curDays);renderMonthGrid();const ci=document.getElementById('custom-inst');ci.value='';ci.onkeydown=e=>{if(e.key==='Enter'){const v=ci.value.trim();if(v&&!selInst.includes(v)){selInst.push(v);renderInstGrid();ci.value=''}e.preventDefault()}};const del=document.getElementById('mbr-del');if(id){del.style.display='';del.onclick=()=>{closeOv('mbr-ov');confirm2('팀원 삭제',`${m?.name}님을 삭제하시겠습니까?`,()=>{D.members=D.members.filter(x=>String(x.id)!==String(id));D.services.forEach(s=>s.assignments=s.assignments.filter(a=>String(a.memberId)!==String(id)));save();render()})}}else del.style.display='none';document.getElementById('mbr-save').onclick=()=>{const name=document.getElementById('mbr-name').value.trim();if(!name){alert('이름을 입력해주세요.');return}const days=[...document.querySelectorAll('.daybtn.on')].map(b=>+b.dataset.d),availability={};Object.entries(monthOverrides).forEach(([k,v])=>{if(v===true||v===false)availability[k]=v});if(id){const target=gm(id);if(!target){alert('수정할 팀원을 찾을 수 없습니다.');return}Object.assign(target,{name,instruments:[...selInst],availableDays:days,availability})}else D.members.push({id:uid(),name,instruments:[...selInst],availableDays:days,availability});save();closeOv('mbr-ov');render()};showOv('mbr-ov')}
+function renderInstGrid(){const all=[...new Set([...INST_LIST,...selInst])],g=document.getElementById('inst-grid');g.innerHTML=all.map(i=>`<button class="pchip${selInst.includes(i)?' on':''}" data-inst="${i}">${i}${selInst.includes(i)?' ✓':''}</button>`).join('');g.querySelectorAll('[data-inst]').forEach(b=>b.onclick=()=>{const i=b.dataset.inst;selInst.includes(i)?selInst=selInst.filter(x=>x!==i):selInst.push(i);renderInstGrid()})}
+function renderDayPick(selDays){document.querySelectorAll('.daybtn').forEach(b=>{b.classList.toggle('on',selDays.includes(+b.dataset.d));b.onclick=()=>{b.classList.toggle('on');renderMonthGrid()}})}
+function renderMonthGrid(){const input=document.getElementById('avail-month'),grid=document.getElementById('month-grid');if(!input||!grid)return;input.value=availMonth;input.onchange=()=>{availMonth=input.value;renderMonthGrid()};document.getElementById('month-prev').onclick=()=>{const d=pd(availMonth+'-01');availMonth=monthKey(new Date(d.getFullYear(),d.getMonth()-1,1));renderMonthGrid()};document.getElementById('month-next').onclick=()=>{const d=pd(availMonth+'-01');availMonth=monthKey(new Date(d.getFullYear(),d.getMonth()+1,1));renderMonthGrid()};const [y,m]=availMonth.split('-').map(Number),first=new Date(y,m-1,1),last=new Date(y,m,0),selDays=[...document.querySelectorAll('.daybtn.on')].map(b=>+b.dataset.d);let h=DAYS.map(d=>`<div class="mhead">${d}</div>`).join('');for(let i=0;i<first.getDay();i++)h+='<div class="mday blank"></div>';for(let day=1;day<=last.getDate();day++){const date=fmt(new Date(y,m-1,day)),state=monthOverrides[date],base=selDays.includes(new Date(y,m-1,day).getDay()),cls=state===true?'yes':state===false?'no':'';const label=state===true?'가능':state===false?'불가':base?'기본가능':'기본불가';h+=`<button class="mday ${cls}" data-date="${date}"><span>${day}</span><small>${label}</small></button>`}grid.innerHTML=h;grid.querySelectorAll('[data-date]').forEach(b=>b.onclick=()=>{const k=b.dataset.date;monthOverrides[k]=monthOverrides[k]===true?false:monthOverrides[k]===false?undefined:true;if(monthOverrides[k]===undefined)delete monthOverrides[k];renderMonthGrid()})}
+
+function confirm2(title,sub,cb){document.getElementById('cfm-title').textContent=title;document.getElementById('cfm-sub').textContent=sub;document.getElementById('cfm-ok').onclick=()=>{closeOv('cfm-ov');cb()};showOv('cfm-ov')}
+function showOv(id){const o=document.getElementById(id);o.style.display='flex';requestAnimationFrame(()=>requestAnimationFrame(()=>o.classList.add('show')));const s=o.querySelector('.sheet,.cfmsheet');if(s)s.scrollTop=0}
+function closeOv(id){const o=document.getElementById(id);o.classList.remove('show');setTimeout(()=>o.style.display='none',300)}
+document.querySelectorAll('.overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)closeOv(o.id)});o.style.display='none'});
+load();render();
+</script>
+</body>
+</html>
+
+
