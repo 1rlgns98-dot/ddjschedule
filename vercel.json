@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/eft-couple.html" }
+    { "source": "/", "destination": "/index.html" }
   ]
 }
