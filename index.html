@@ -270,6 +270,16 @@ body{background:
 .cycle-stat{background:rgba(255,254,251,.92);border:1px solid rgba(229,222,213,.76);border-radius:12px;padding:12px;text-align:center}
 .cycle-stat-n{font-size:20px;font-weight:800;color:var(--pri)}
 .cycle-stat-l{font-size:11px;color:var(--sub);margin-top:2px}
+.profile-summary{display:grid;gap:10px;margin-top:2px}
+.profile-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--bdr)}
+.profile-row:last-child{border-bottom:none}
+.profile-k{font-size:12px;color:var(--sub);font-weight:600}
+.profile-v{font-size:14px;font-weight:700;text-align:right}
+.profile-actions{display:flex;gap:8px;margin-top:14px}
+.btn-plain{flex:1;padding:12px;border:1px solid var(--bdr);border-radius:12px;background:var(--card);color:var(--txt);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-plain.primary{border-color:transparent;background:linear-gradient(135deg,var(--pri),var(--pri-2));color:#fff;box-shadow:0 10px 20px rgba(93,90,136,.16)}
+.profile-select{width:100%;padding:12px 14px;border:1px solid var(--bdr);border-radius:12px;background:var(--card);color:var(--txt);font-size:14px;font-family:inherit;outline:none}
+.profile-select:focus{border-color:var(--pri);box-shadow:0 0 0 4px rgba(93,90,136,.12)}
 
 /* ── MISC ── */
 .empty{text-align:center;padding:40px 20px;color:var(--sub)}
@@ -593,6 +603,7 @@ let chatMessages = {};
 let chatDone = {};
 let selectedMood = -1;
 let selectedCycle = -1;
+let profileEditing = false;
 
 function updateRoleBadge() {
   const b = document.getElementById('role-badge-hdr');
@@ -984,6 +995,73 @@ function saveDiary() {
   showXPToast(10, '일기 기록');
 }
 
+// ══════════════ PROFILE ══════════════
+function escAttr(v) {
+  return String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function getRoleName(role) {
+  return ({pursuer:'추격자', withdrawer:'회피자', unknown:'패턴 탐색 중'}[role] || '패턴 탐색 중');
+}
+function renderProfileCard() {
+  if (profileEditing) {
+    return `<div class="card">
+      <div class="label">프로필 수정</div>
+      <div class="ob-lbl">나의 이름</div>
+      <input class="ob-inp" id="profile-name" value="${escAttr(S.name)}" placeholder="나의 이름">
+      <div class="ob-lbl" style="margin-top:14px">배우자 이름</div>
+      <input class="ob-inp" id="profile-partner" value="${escAttr(S.partnerName)}" placeholder="배우자 이름">
+      <div class="ob-lbl" style="margin-top:14px">나의 갈등 패턴</div>
+      <select class="profile-select" id="profile-role">
+        <option value="pursuer" ${S.role==='pursuer'?'selected':''}>추격자</option>
+        <option value="withdrawer" ${S.role==='withdrawer'?'selected':''}>회피자</option>
+        <option value="unknown" ${S.role==='unknown'||!S.role?'selected':''}>아직 잘 모르겠어요</option>
+      </select>
+      <div class="profile-actions">
+        <button class="btn-plain" onclick="cancelProfileEdit()">취소</button>
+        <button class="btn-plain primary" onclick="saveProfileEdit()">저장</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="card">
+    <div class="label">프로필</div>
+    <div class="profile-summary">
+      <div class="profile-row"><div class="profile-k">나</div><div class="profile-v">${escAttr(S.name)}</div></div>
+      <div class="profile-row"><div class="profile-k">배우자</div><div class="profile-v">${escAttr(S.partnerName)}</div></div>
+      <div class="profile-row"><div class="profile-k">갈등 패턴</div><div class="profile-v">${getRoleName(S.role)}</div></div>
+    </div>
+    <div class="profile-actions">
+      <button class="btn-plain primary" onclick="editProfile()">프로필 수정</button>
+    </div>
+  </div>`;
+}
+function editProfile() {
+  profileEditing = true;
+  renderGrow();
+}
+function cancelProfileEdit() {
+  profileEditing = false;
+  renderGrow();
+}
+function saveProfileEdit() {
+  const name = document.getElementById('profile-name')?.value.trim();
+  const partner = document.getElementById('profile-partner')?.value.trim();
+  const role = document.getElementById('profile-role')?.value || 'unknown';
+  if (!name || !partner) {
+    alert('이름과 배우자 이름을 모두 입력해주세요');
+    return;
+  }
+  S.name = name;
+  S.partnerName = partner;
+  S.role = role;
+  S.done = true;
+  if (S.role) addBadge('role');
+  profileEditing = false;
+  save();
+  updateRoleBadge();
+  showTab('grow');
+  showXPToast(0, '프로필 수정 완료');
+}
+
 // ══════════════ GROWTH ══════════════
 function renderGrow() {
   const lvl = getLevel(S.xp);
@@ -1029,6 +1107,7 @@ function renderGrow() {
   }).join('') : `<div class="small" style="padding:8px 0">훈련을 완료하면 개인화 추천이 나타납니다 🌱</div>`;
 
   document.getElementById('pg-grow').innerHTML = `<div class="sec">
+    ${renderProfileCard()}
     <div class="card">
       <div class="label">나의 레벨</div>
       <div class="level-display">
@@ -1070,7 +1149,7 @@ function renderGrow() {
 function addXP(n, reason) { S.xp+=n; showXPToast(n, reason) }
 function showXPToast(n, reason) {
   const t = document.createElement('div');
-  t.className = 'xp-toast'; t.textContent = `+${n} XP · ${reason}`;
+  t.className = 'xp-toast'; t.textContent = n > 0 ? `+${n} XP · ${reason}` : reason;
   document.body.appendChild(t);
   setTimeout(()=>t.remove(), 2600);
 }
