@@ -37,6 +37,7 @@ body{background:
 #ps{position:fixed;inset:0;background:transparent;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px}
 #ps.gone{display:none}
 .ps-logo{font-size:38px;margin-bottom:10px;text-align:center;filter:drop-shadow(0 8px 18px rgba(93,90,136,.18))}
+.coach-hero{width:132px;height:132px;object-fit:contain;margin-bottom:12px;filter:drop-shadow(0 18px 30px rgba(48,38,30,.12))}
 .ps-brand{font-size:27px;font-weight:800;color:var(--txt);text-align:center;margin-bottom:7px}
 .ps-tag{font-size:13px;color:var(--sub);text-align:center;margin-bottom:40px;line-height:1.6}
 .ps-cards{display:flex;flex-direction:column;gap:14px;width:100%;max-width:360px}
@@ -55,6 +56,7 @@ body{background:
 #ob.gone{display:none}
 .ob-inner{flex:1;max-width:480px;margin:0 auto;padding:48px 24px 32px;display:flex;flex-direction:column;min-height:100%}
 .ob-logo{font-size:36px;margin-bottom:8px}
+.ob-illust{width:104px;height:104px;object-fit:contain;margin-bottom:12px;filter:drop-shadow(0 14px 24px rgba(48,38,30,.1))}
 .ob-brand{font-size:24px;font-weight:800;color:var(--txt);margin-bottom:5px}
 .ob-tag{font-size:13px;color:var(--sub);margin-bottom:36px;line-height:1.6}
 .ob-dots{display:flex;gap:6px;margin-bottom:26px}
@@ -126,9 +128,11 @@ body{background:
 .stat-l{font-size:11px;color:var(--sub);margin-top:2px}
 .mission-card{background:linear-gradient(135deg,#68628E,#474365);color:#fff;border-radius:18px;padding:21px;box-shadow:0 18px 36px rgba(71,67,101,.24);margin-bottom:12px;position:relative;overflow:hidden}
 .mission-card:after{content:"";position:absolute;inset:auto -48px -64px auto;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.12)}
+.mission-card>*{position:relative;z-index:1}
+.mission-art{position:absolute;right:10px;bottom:-8px;width:104px;height:104px;object-fit:contain;opacity:.9;z-index:0;filter:drop-shadow(0 12px 22px rgba(0,0,0,.14))}
 .mission-label{font-size:10px;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
 .mission-title{font-size:17px;font-weight:700;margin-bottom:4px}
-.mission-desc{font-size:13px;opacity:.85;line-height:1.55}
+.mission-desc{font-size:13px;opacity:.85;line-height:1.55;max-width:calc(100% - 76px)}
 .cycle-card{border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm)}
 .cycle-card.pursuer{background:linear-gradient(135deg,#FAE8EA,#FDF0F1);border:1px solid #EEC8CC}
 .cycle-card.withdrawer{background:linear-gradient(135deg,#EEE8FA,#F3F0FD);border:1px solid #C8B8E8}
@@ -280,6 +284,7 @@ body{background:
 .btn-plain.primary{border-color:transparent;background:linear-gradient(135deg,var(--pri),var(--pri-2));color:#fff;box-shadow:0 10px 20px rgba(93,90,136,.16)}
 .profile-select{width:100%;padding:12px 14px;border:1px solid var(--bdr);border-radius:12px;background:var(--card);color:var(--txt);font-size:14px;font-family:inherit;outline:none}
 .profile-select:focus{border-color:var(--pri);box-shadow:0 0 0 4px rgba(93,90,136,.12)}
+.growth-illust{width:90px;height:90px;object-fit:contain;float:right;margin:-8px -4px 4px 12px;filter:drop-shadow(0 12px 22px rgba(48,38,30,.1))}
 
 /* ── MISC ── */
 .empty{text-align:center;padding:40px 20px;color:var(--sub)}
@@ -296,7 +301,7 @@ body{background:
 
 <!-- ══ PARTNER SELECT ══ -->
 <div id="ps">
-  <div class="ps-logo">💜</div>
+  <img class="coach-hero" src="./assets/characters/coach-default.png" alt="">
   <div class="ps-brand">우리잇기</div>
   <div class="ps-tag">EFT 기반 부부 정서 연결 훈련<br>각자의 프로필로 접속하세요</div>
   <div class="ps-cards" id="ps-cards"></div>
@@ -305,7 +310,7 @@ body{background:
 <!-- ══ ONBOARDING ══ -->
 <div id="ob" class="gone">
 <div class="ob-inner">
-  <div class="ob-logo">💜</div>
+  <img class="ob-illust" src="./assets/characters/coach-empathy.png" alt="">
   <div class="ob-brand">우리잇기</div>
   <div class="ob-tag">나의 정서 패턴을 이해하고<br>배우자와 더 깊이 연결되는 연습을 시작합니다</div>
   <div class="ob-dots"><div class="ob-dot on" id="d1"></div><div class="ob-dot" id="d2"></div><div class="ob-dot" id="d3"></div></div>
@@ -651,6 +656,7 @@ function renderHome() {
         <div class="mission-label">오늘의 미션</div>
         <div class="mission-title">${totalSc<1?'첫 시나리오 훈련':totalSc<3?'시나리오 계속하기':'채팅 훈련 도전'}</div>
         <div class="mission-desc">${totalSc<1?'부부 갈등 상황을 통해 나의 반응 패턴을 인식해보세요.':totalSc<3?`${3-totalSc}개 시나리오가 남았어요. 계속 연습해보세요.`:'감정을 직접 표현하는 채팅 훈련에 도전해보세요.'}</div>
+        <img class="mission-art" src="./assets/characters/coach-empathy.png" alt="">
       </div>
       <div class="stats-row">
         <div class="stat-c"><div class="stat-n">${S.xp}</div><div class="stat-l">총 XP</div></div>
@@ -1109,6 +1115,7 @@ function renderGrow() {
   document.getElementById('pg-grow').innerHTML = `<div class="sec">
     ${renderProfileCard()}
     <div class="card">
+      <img class="growth-illust" src="./assets/characters/coach-growth.png" alt="">
       <div class="label">나의 레벨</div>
       <div class="level-display">
         <div class="level-ico">${lvl.ico}</div>

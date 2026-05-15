@@ -37,6 +37,7 @@ body{background:
 #ps{position:fixed;inset:0;background:transparent;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px}
 #ps.gone{display:none}
 .ps-logo{font-size:38px;margin-bottom:10px;text-align:center;filter:drop-shadow(0 8px 18px rgba(93,90,136,.18))}
+.coach-hero{width:132px;height:132px;object-fit:contain;margin-bottom:12px;filter:drop-shadow(0 18px 30px rgba(48,38,30,.12))}
 .ps-brand{font-size:27px;font-weight:800;color:var(--txt);text-align:center;margin-bottom:7px}
 .ps-tag{font-size:13px;color:var(--sub);text-align:center;margin-bottom:40px;line-height:1.6}
 .ps-cards{display:flex;flex-direction:column;gap:14px;width:100%;max-width:360px}
@@ -55,6 +56,7 @@ body{background:
 #ob.gone{display:none}
 .ob-inner{flex:1;max-width:480px;margin:0 auto;padding:48px 24px 32px;display:flex;flex-direction:column;min-height:100%}
 .ob-logo{font-size:36px;margin-bottom:8px}
+.ob-illust{width:104px;height:104px;object-fit:contain;margin-bottom:12px;filter:drop-shadow(0 14px 24px rgba(48,38,30,.1))}
 .ob-brand{font-size:24px;font-weight:800;color:var(--txt);margin-bottom:5px}
 .ob-tag{font-size:13px;color:var(--sub);margin-bottom:36px;line-height:1.6}
 .ob-dots{display:flex;gap:6px;margin-bottom:26px}
@@ -126,9 +128,11 @@ body{background:
 .stat-l{font-size:11px;color:var(--sub);margin-top:2px}
 .mission-card{background:linear-gradient(135deg,#68628E,#474365);color:#fff;border-radius:18px;padding:21px;box-shadow:0 18px 36px rgba(71,67,101,.24);margin-bottom:12px;position:relative;overflow:hidden}
 .mission-card:after{content:"";position:absolute;inset:auto -48px -64px auto;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.12)}
+.mission-card>*{position:relative;z-index:1}
+.mission-art{position:absolute;right:10px;bottom:-8px;width:104px;height:104px;object-fit:contain;opacity:.9;z-index:0;filter:drop-shadow(0 12px 22px rgba(0,0,0,.14))}
 .mission-label{font-size:10px;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
 .mission-title{font-size:17px;font-weight:700;margin-bottom:4px}
-.mission-desc{font-size:13px;opacity:.85;line-height:1.55}
+.mission-desc{font-size:13px;opacity:.85;line-height:1.55;max-width:calc(100% - 76px)}
 .cycle-card{border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm)}
 .cycle-card.pursuer{background:linear-gradient(135deg,#FAE8EA,#FDF0F1);border:1px solid #EEC8CC}
 .cycle-card.withdrawer{background:linear-gradient(135deg,#EEE8FA,#F3F0FD);border:1px solid #C8B8E8}
@@ -270,6 +274,17 @@ body{background:
 .cycle-stat{background:rgba(255,254,251,.92);border:1px solid rgba(229,222,213,.76);border-radius:12px;padding:12px;text-align:center}
 .cycle-stat-n{font-size:20px;font-weight:800;color:var(--pri)}
 .cycle-stat-l{font-size:11px;color:var(--sub);margin-top:2px}
+.profile-summary{display:grid;gap:10px;margin-top:2px}
+.profile-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--bdr)}
+.profile-row:last-child{border-bottom:none}
+.profile-k{font-size:12px;color:var(--sub);font-weight:600}
+.profile-v{font-size:14px;font-weight:700;text-align:right}
+.profile-actions{display:flex;gap:8px;margin-top:14px}
+.btn-plain{flex:1;padding:12px;border:1px solid var(--bdr);border-radius:12px;background:var(--card);color:var(--txt);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-plain.primary{border-color:transparent;background:linear-gradient(135deg,var(--pri),var(--pri-2));color:#fff;box-shadow:0 10px 20px rgba(93,90,136,.16)}
+.profile-select{width:100%;padding:12px 14px;border:1px solid var(--bdr);border-radius:12px;background:var(--card);color:var(--txt);font-size:14px;font-family:inherit;outline:none}
+.profile-select:focus{border-color:var(--pri);box-shadow:0 0 0 4px rgba(93,90,136,.12)}
+.growth-illust{width:90px;height:90px;object-fit:contain;float:right;margin:-8px -4px 4px 12px;filter:drop-shadow(0 12px 22px rgba(48,38,30,.1))}
 
 /* ── MISC ── */
 .empty{text-align:center;padding:40px 20px;color:var(--sub)}
@@ -286,7 +301,7 @@ body{background:
 
 <!-- ══ PARTNER SELECT ══ -->
 <div id="ps">
-  <div class="ps-logo">💜</div>
+  <img class="coach-hero" src="./assets/characters/coach-default.png" alt="">
   <div class="ps-brand">우리잇기</div>
   <div class="ps-tag">EFT 기반 부부 정서 연결 훈련<br>각자의 프로필로 접속하세요</div>
   <div class="ps-cards" id="ps-cards"></div>
@@ -295,7 +310,7 @@ body{background:
 <!-- ══ ONBOARDING ══ -->
 <div id="ob" class="gone">
 <div class="ob-inner">
-  <div class="ob-logo">💜</div>
+  <img class="ob-illust" src="./assets/characters/coach-empathy.png" alt="">
   <div class="ob-brand">우리잇기</div>
   <div class="ob-tag">나의 정서 패턴을 이해하고<br>배우자와 더 깊이 연결되는 연습을 시작합니다</div>
   <div class="ob-dots"><div class="ob-dot on" id="d1"></div><div class="ob-dot" id="d2"></div><div class="ob-dot" id="d3"></div></div>
@@ -593,6 +608,7 @@ let chatMessages = {};
 let chatDone = {};
 let selectedMood = -1;
 let selectedCycle = -1;
+let profileEditing = false;
 
 function updateRoleBadge() {
   const b = document.getElementById('role-badge-hdr');
@@ -640,6 +656,7 @@ function renderHome() {
         <div class="mission-label">오늘의 미션</div>
         <div class="mission-title">${totalSc<1?'첫 시나리오 훈련':totalSc<3?'시나리오 계속하기':'채팅 훈련 도전'}</div>
         <div class="mission-desc">${totalSc<1?'부부 갈등 상황을 통해 나의 반응 패턴을 인식해보세요.':totalSc<3?`${3-totalSc}개 시나리오가 남았어요. 계속 연습해보세요.`:'감정을 직접 표현하는 채팅 훈련에 도전해보세요.'}</div>
+        <img class="mission-art" src="./assets/characters/coach-empathy.png" alt="">
       </div>
       <div class="stats-row">
         <div class="stat-c"><div class="stat-n">${S.xp}</div><div class="stat-l">총 XP</div></div>
@@ -984,6 +1001,73 @@ function saveDiary() {
   showXPToast(10, '일기 기록');
 }
 
+// ══════════════ PROFILE ══════════════
+function escAttr(v) {
+  return String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function getRoleName(role) {
+  return ({pursuer:'추격자', withdrawer:'회피자', unknown:'패턴 탐색 중'}[role] || '패턴 탐색 중');
+}
+function renderProfileCard() {
+  if (profileEditing) {
+    return `<div class="card">
+      <div class="label">프로필 수정</div>
+      <div class="ob-lbl">나의 이름</div>
+      <input class="ob-inp" id="profile-name" value="${escAttr(S.name)}" placeholder="나의 이름">
+      <div class="ob-lbl" style="margin-top:14px">배우자 이름</div>
+      <input class="ob-inp" id="profile-partner" value="${escAttr(S.partnerName)}" placeholder="배우자 이름">
+      <div class="ob-lbl" style="margin-top:14px">나의 갈등 패턴</div>
+      <select class="profile-select" id="profile-role">
+        <option value="pursuer" ${S.role==='pursuer'?'selected':''}>추격자</option>
+        <option value="withdrawer" ${S.role==='withdrawer'?'selected':''}>회피자</option>
+        <option value="unknown" ${S.role==='unknown'||!S.role?'selected':''}>아직 잘 모르겠어요</option>
+      </select>
+      <div class="profile-actions">
+        <button class="btn-plain" onclick="cancelProfileEdit()">취소</button>
+        <button class="btn-plain primary" onclick="saveProfileEdit()">저장</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="card">
+    <div class="label">프로필</div>
+    <div class="profile-summary">
+      <div class="profile-row"><div class="profile-k">나</div><div class="profile-v">${escAttr(S.name)}</div></div>
+      <div class="profile-row"><div class="profile-k">배우자</div><div class="profile-v">${escAttr(S.partnerName)}</div></div>
+      <div class="profile-row"><div class="profile-k">갈등 패턴</div><div class="profile-v">${getRoleName(S.role)}</div></div>
+    </div>
+    <div class="profile-actions">
+      <button class="btn-plain primary" onclick="editProfile()">프로필 수정</button>
+    </div>
+  </div>`;
+}
+function editProfile() {
+  profileEditing = true;
+  renderGrow();
+}
+function cancelProfileEdit() {
+  profileEditing = false;
+  renderGrow();
+}
+function saveProfileEdit() {
+  const name = document.getElementById('profile-name')?.value.trim();
+  const partner = document.getElementById('profile-partner')?.value.trim();
+  const role = document.getElementById('profile-role')?.value || 'unknown';
+  if (!name || !partner) {
+    alert('이름과 배우자 이름을 모두 입력해주세요');
+    return;
+  }
+  S.name = name;
+  S.partnerName = partner;
+  S.role = role;
+  S.done = true;
+  if (S.role) addBadge('role');
+  profileEditing = false;
+  save();
+  updateRoleBadge();
+  showTab('grow');
+  showXPToast(0, '프로필 수정 완료');
+}
+
 // ══════════════ GROWTH ══════════════
 function renderGrow() {
   const lvl = getLevel(S.xp);
@@ -1029,7 +1113,9 @@ function renderGrow() {
   }).join('') : `<div class="small" style="padding:8px 0">훈련을 완료하면 개인화 추천이 나타납니다 🌱</div>`;
 
   document.getElementById('pg-grow').innerHTML = `<div class="sec">
+    ${renderProfileCard()}
     <div class="card">
+      <img class="growth-illust" src="./assets/characters/coach-growth.png" alt="">
       <div class="label">나의 레벨</div>
       <div class="level-display">
         <div class="level-ico">${lvl.ico}</div>
@@ -1070,7 +1156,7 @@ function renderGrow() {
 function addXP(n, reason) { S.xp+=n; showXPToast(n, reason) }
 function showXPToast(n, reason) {
   const t = document.createElement('div');
-  t.className = 'xp-toast'; t.textContent = `+${n} XP · ${reason}`;
+  t.className = 'xp-toast'; t.textContent = n > 0 ? `+${n} XP · ${reason}` : reason;
   document.body.appendChild(t);
   setTimeout(()=>t.remove(), 2600);
 }
